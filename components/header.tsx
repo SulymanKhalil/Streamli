@@ -32,17 +32,17 @@ const aboutItems: ContextualItem[] = [
   {
     name: "Our Vision",
     desc: "Where we are going",
-    href: "/about#vision",
+    href: "/vision",
   },
   {
     name: "Our Philosophy",
     desc: "How we think and build",
-    href: "/about#philosophy",
+    href: "/philosophy",
   },
   {
     name: "Our Mission",
     desc: "What drives our work",
-    href: "/about#mission",
+    href: "/mission",
   },
   {
     name: "Team",

@@ -7,6 +7,6 @@ export const metadata: Metadata = {
     "We convert theoretical breakthroughs into resilient, mission-critical infrastructure. Grounded in architectural rigor and execution certainty.",
 };
 
-export default function AboutPage() {
+export default function MissionPage() {
   return <OurMissionView />;
 }

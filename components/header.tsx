@@ -22,7 +22,7 @@ const servicesItems: ContextualItem[] = [
     href: "/services/video-streaming",
   },
   {
-    name: "AI",
+    name: "AI Engineering",
     desc: "Intelligent solutions with AI",
     href: "/services/ai-solutions",
   },
@@ -191,7 +191,7 @@ export function Header() {
                   </Link>
                 </li>
 
-                {/* 2. Services (with Right-Side Arrow & Hover Contextual Trigger) */}
+                {/* 2. Services (with Right-Facing Arrow & Hover Contextual Trigger) */}
                 <li
                   className="fullscreen-primary-item"
                   onMouseEnter={() => handleMouseEnter("services")}
@@ -204,12 +204,12 @@ export function Header() {
                   >
                     <span>Services</span>
                     <span className="nav-arrow" aria-hidden="true">
-                      {hoveredMenu === "services" ? "↑" : "↓"}
+                      →
                     </span>
                   </Link>
                 </li>
 
-                {/* 3. About (with Right-Side Arrow & Hover Contextual Trigger) */}
+                {/* 3. About (with Right-Facing Arrow & Hover Contextual Trigger) */}
                 <li
                   className="fullscreen-primary-item"
                   onMouseEnter={() => handleMouseEnter("about")}
@@ -222,7 +222,7 @@ export function Header() {
                   >
                     <span>About</span>
                     <span className="nav-arrow" aria-hidden="true">
-                      {hoveredMenu === "about" ? "↑" : "↓"}
+                      →
                     </span>
                   </Link>
                 </li>

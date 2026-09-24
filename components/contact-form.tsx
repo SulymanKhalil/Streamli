@@ -111,7 +111,7 @@ export function ContactForm() {
 
         <div className="form-submit-row">
           <span className="eyebrow" style={{ color: "#64748b" }}>
-            <span className="eyebrow-dot" style={{ background: "#0284c7" }} /> Direct senior engineer review
+            Direct senior engineer review
           </span>
           <button disabled={status === "loading"} type="submit" className="btn btn--sky">
             {status === "loading" ? "Transmitting…" : "Transmit Signal"} <span className="arrow">↗</span>

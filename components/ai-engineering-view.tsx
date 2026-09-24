@@ -291,9 +291,9 @@ export function AiEngineeringView() {
           {/* 3-col capability cards */}
           <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: SP.lg }}>
             {[
-              { num: "01 / REASONING", title: "Autonomous Agent Graphs",   desc: "Multi-step decision trees and self-correcting cognitive loops engineered for enterprise automation and mission execution." },
-              { num: "02 / RETRIEVAL", title: "Hybrid Context Engines",     desc: "Dense vector embeddings synthesized with sparse semantic indexing for sub-millisecond factual verification across billions of records." },
-              { num: "03 / INFERENCE", title: "Edge & Cloud Acceleration",  desc: "Quantized model runtime engines delivering predictable latency benchmarks across heterogeneous hardware infrastructure." },
+              { num: "REASONING", title: "Autonomous Agent Graphs",   desc: "Multi-step decision trees and self-correcting cognitive loops engineered for enterprise automation and mission execution." },
+              { num: "RETRIEVAL", title: "Hybrid Context Engines",     desc: "Dense vector embeddings synthesized with sparse semantic indexing for sub-millisecond factual verification across billions of records." },
+              { num: "INFERENCE", title: "Edge & Cloud Acceleration",  desc: "Quantized model runtime engines delivering predictable latency benchmarks across heterogeneous hardware infrastructure." },
             ].map(({ num, title, desc }) => (
               <div
                 key={num}

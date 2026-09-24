@@ -180,7 +180,7 @@ export function PinnedStory({ kicker, title, steps, tone = "mint", id }: { kicke
       <div className="pinned-story__sticky">
         <div className="shell pinned-story__grid">
           <div className="pinned-story__intro">
-            <p className="eyebrow"><span className="eyebrow-dot" /> {kicker}</p>
+            <p className="eyebrow">{kicker}</p>
             <h2 className="h2">{title}</h2>
             <div className="story-progress" aria-hidden="true">
               <i />
@@ -195,7 +195,7 @@ export function PinnedStory({ kicker, title, steps, tone = "mint", id }: { kicke
             <span className="story-dot story-dot--three" />
           </div>
           <div className="story-copy">
-            <span className="eyebrow">{step.index} / {step.label || "IN MOTION"}</span>
+            <span className="eyebrow">{step.index}- {step.label || "IN MOTION"}</span>
             <h3>{step.title}</h3>
             <p>{step.text}</p>
             <div className="story-count">
@@ -224,12 +224,12 @@ export function TestimonialStack() {
     <section ref={ref} className="testimonial-stack">
       <div className="testimonial-stack__sticky">
         <div className="shell">
-          <p className="eyebrow eyebrow--dark"><span className="eyebrow-dot" /> Engineering Trust</p>
+          <p className="eyebrow eyebrow--dark">Engineering Trust</p>
           <h2 className="quote">High-throughput streaming platforms built with craft, conviction and zero compromise.</h2>
           <div className="stack-cards">
             {cards.map(([number, title, text], index) => (
               <article className="stack-card" style={{ "--card-index": index } as React.CSSProperties} key={number}>
-                <span style={{ font: '600 11px "DM Mono", monospace', color: "#0284c7" }}>{number} / PRINCIPLE</span>
+                <span style={{ font: '600 11px "DM Mono", monospace', color: "#0284c7" }}>{number}- PRINCIPLE</span>
                 <h3>{title}.</h3>
                 <p>{text}</p>
                 <small>STREAMING PLATFORM PERSPECTIVES</small>

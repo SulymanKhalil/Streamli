@@ -17,7 +17,7 @@ export default function Home() {
       <ParallaxSection className="manifesto parallax-field">
         <div className="shell">
           <p className="eyebrow" style={{ color: "#0284c7" }}>
-            <span className="eyebrow-dot" /> A specialized streaming &amp; technology partner
+            A specialized streaming &amp; technology partner
           </p>
           <h2 className="h2">
             Mission-critical video requires more than generic cloud tools. It needs a <span className="serif">dedicated streaming architecture.</span>
@@ -42,7 +42,7 @@ export default function Home() {
       <section className="service-showcase" id="capabilities">
         <div className="shell service-showcase__intro">
           <div>
-            <p className="eyebrow"><span className="eyebrow-dot" /> Core Products // 03 Domains</p>
+            <p className="eyebrow">Domains</p>
             <h2 className="case-title">From video ingest to global living room screens.</h2>
           </div>
           <div>
@@ -58,7 +58,7 @@ export default function Home() {
         <HorizontalRail className="service-horizontal">
           {servicesData.map((s) => (
             <article className="service" key={s.slug}>
-              <span className="service-index">{s.index} // {s.shortTitle.toUpperCase()}</span>
+              <span className="service-index">{s.shortTitle.toUpperCase()}</span>
               <div>
                 <h3>{s.title}</h3>
                 <p>{s.summary}</p>
@@ -73,7 +73,7 @@ export default function Home() {
 
       <section className="section rule">
         <div className="shell">
-          <p className="eyebrow"><span className="eyebrow-dot" /> Purpose-Built Media Infrastructure</p>
+          <p className="eyebrow">Purpose-Built Media Infrastructure</p>
           <div className="case-grid">
             <div>
               <h2 className="case-title">Move with broadcast reliability.</h2>
@@ -97,95 +97,87 @@ export default function Home() {
         steps={processSteps}
       />
 
-      {/* Editorial Asymmetric Team Section */}
       <section className="editorial-team-section" id="team">
         <div className="shell">
           <div className="editorial-team-header">
             <div className="editorial-team-intro">
-              <p className="eyebrow"><span className="eyebrow-dot" /> THE COLLECTIVE // LEADERSHIP</p>
+              <p className="eyebrow">Minds Behind</p>
               <h2 className="editorial-team-title">The minds behind the streaming architecture.</h2>
             </div>
-            <span className="editorial-team-counter">[04 SPECIALISTS]</span>
           </div>
 
           <div className="editorial-team-grid">
-            {/* Column 1: Member 01 & Member 03 */}
-            <div className="editorial-team-col">
-              {/* Member 01: Qadeer Amin */}
-              <article className="team-editorial-card">
-                <div className="team-image-frame">
-                  <span className="team-card-idx-badge">01</span>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={teamMembers[0].image}
-                    alt={teamMembers[0].name}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-                <div className="team-meta-stack">
-                  <h3 className="team-member-name">{teamMembers[0].name}</h3>
-                  <p className="team-member-role">{teamMembers[0].role}</p>
-                </div>
-              </article>
+            {/* Member 01: CYO (Anas Ali) */}
+            <article className="team-editorial-card">
+              <div className="team-image-frame">
+                <span className="team-card-idx-badge">01</span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={teamMembers[1].image}
+                  alt={teamMembers[1].name}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div className="team-meta-stack">
+                <h3 className="team-member-name">{teamMembers[1].name}</h3>
+                <p className="team-member-role">{teamMembers[1].role}</p>
+              </div>
+            </article>
 
-              {/* Member 03: Sulyman Khalil */}
-              <article className="team-editorial-card">
-                <div className="team-image-frame">
-                  <span className="team-card-idx-badge">03</span>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={teamMembers[2].image}
-                    alt={teamMembers[2].name}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-                <div className="team-meta-stack">
-                  <h3 className="team-member-name">{teamMembers[2].name}</h3>
-                  <p className="team-member-role">{teamMembers[2].role}</p>
-                </div>
-              </article>
-            </div>
+            {/* Member 02: Shumail */}
+            <article className="team-editorial-card">
+              <div className="team-image-frame">
+                <span className="team-card-idx-badge">02</span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={teamMembers[3].image}
+                  alt={teamMembers[3].name}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div className="team-meta-stack">
+                <h3 className="team-member-name">{teamMembers[3].name}</h3>
+                <p className="team-member-role">{teamMembers[3].role}</p>
+              </div>
+            </article>
 
-            {/* Column 2: Member 02 & Member 04 (Staggered Rhythm) */}
-            <div className="editorial-team-col editorial-team-col--staggered">
-              {/* Member 02: Anas Ali */}
-              <article className="team-editorial-card">
-                <div className="team-image-frame">
-                  <span className="team-card-idx-badge">02</span>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={teamMembers[1].image}
-                    alt={teamMembers[1].name}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-                <div className="team-meta-stack">
-                  <h3 className="team-member-name">{teamMembers[1].name}</h3>
-                  <p className="team-member-role">{teamMembers[1].role}</p>
-                </div>
-              </article>
+            {/* Member 03: Yaqeen Amin (Qadeer Amin) */}
+            <article className="team-editorial-card">
+              <div className="team-image-frame">
+                <span className="team-card-idx-badge">03</span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={teamMembers[0].image}
+                  alt={teamMembers[0].name}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div className="team-meta-stack">
+                <h3 className="team-member-name">{teamMembers[0].name}</h3>
+                <p className="team-member-role">{teamMembers[0].role}</p>
+              </div>
+            </article>
 
-              {/* Member 04: Shumail */}
-              <article className="team-editorial-card">
-                <div className="team-image-frame">
-                  <span className="team-card-idx-badge">04</span>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={teamMembers[3].image}
-                    alt={teamMembers[3].name}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-                <div className="team-meta-stack">
-                  <h3 className="team-member-name">{teamMembers[3].name}</h3>
-                  <p className="team-member-role">{teamMembers[3].role}</p>
-                </div>
-              </article>
-            </div>
+            {/* Member 04: Sulyman Khalil */}
+            <article className="team-editorial-card">
+              <div className="team-image-frame">
+                <span className="team-card-idx-badge">04</span>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={teamMembers[2].image}
+                  alt={teamMembers[2].name}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div className="team-meta-stack">
+                <h3 className="team-member-name">{teamMembers[2].name}</h3>
+                <p className="team-member-role">{teamMembers[2].role}</p>
+              </div>
+            </article>
           </div>
         </div>
       </section>

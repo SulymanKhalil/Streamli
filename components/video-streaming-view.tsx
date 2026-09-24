@@ -499,22 +499,22 @@ export function VideoStreamingView() {
           <div className="grid grid-cols-1 md:grid-cols-4" style={{ gap: SP.gutter }}>
             {[
               {
-                num: "01 / Protocols",
+                num: "Protocols",
                 title: "Streaming Protocols",
                 items: ["WebRTC Core", "LL-HLS & HLS", "MPEG-DASH", "RTMP / SRT Ingestion"],
               },
               {
-                num: "02 / Encoders",
+                num: "Encoders",
                 title: "Codecs",
                 items: ["AV1 Next-Gen", "HEVC (H.265)", "AVC (H.264) High Profile", "VP9 & Opus Audio"],
               },
               {
-                num: "03 / Compute",
+                num: "Compute",
                 title: "Edge Ingestion",
                 items: ["Anycast Routing", "GPU Accelerated Nodes", "Dynamic Manifest Rewriting", "Real-Time Watermarking"],
               },
               {
-                num: "04 / Client",
+                num: "Client",
                 title: "Player Frameworks",
                 items: ["React Native & Flutter", "Native iOS AVPlayer", "Android ExoPlayer", "Headless Web SDKs"],
               },

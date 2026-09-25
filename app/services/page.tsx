@@ -12,20 +12,20 @@ function ServiceDiagram({ slug }: { slug: string }) {
       <svg viewBox="0 0 340 200" width="100%" height="100%" style={{ overflow: "visible" }}>
         <defs>
           <linearGradient id="pdGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.9" />
-            <stop offset="100%" stopColor="#0284c7" stopOpacity="0.3" />
+            <stop offset="0%" stopColor="#007BFF" stopOpacity="0.9" />
+            <stop offset="100%" stopColor="#0066FF" stopOpacity="0.3" />
           </linearGradient>
         </defs>
-        <rect x="20" y="30" width="85" height="140" rx="10" fill="rgba(11, 19, 41, 0.7)" stroke="#38bdf8" strokeWidth="1.5" />
-        <rect x="125" y="20" width="100" height="160" rx="12" fill="rgba(11, 19, 41, 0.9)" stroke="#0284c7" strokeWidth="2" />
-        <rect x="245" y="45" width="75" height="110" rx="8" fill="rgba(11, 19, 41, 0.7)" stroke="#38bdf8" strokeWidth="1.5" />
+        <rect x="20" y="30" width="85" height="140" rx="10" fill="rgba(11, 19, 41, 0.7)" stroke="#007BFF" strokeWidth="1.5" />
+        <rect x="125" y="20" width="100" height="160" rx="12" fill="rgba(11, 19, 41, 0.9)" stroke="#0066FF" strokeWidth="2" />
+        <rect x="245" y="45" width="75" height="110" rx="8" fill="rgba(11, 19, 41, 0.7)" stroke="#007BFF" strokeWidth="1.5" />
         {/* Mock UI player lines */}
         <circle cx="175" cy="80" r="18" fill="url(#pdGrad)" />
         <polygon points="171,73 182,80 171,87" fill="#ffffff" />
-        <rect x="140" y="115" width="70" height="6" rx="3" fill="#38bdf8" />
+        <rect x="140" y="115" width="70" height="6" rx="3" fill="#007BFF" />
         <rect x="140" y="130" width="45" height="5" rx="2" fill="rgba(255,255,255,0.4)" />
-        <line x1="105" y1="100" x2="125" y2="100" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="3 3" />
-        <line x1="225" y1="100" x2="245" y2="100" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="3 3" />
+        <line x1="105" y1="100" x2="125" y2="100" stroke="#007BFF" strokeWidth="1.5" strokeDasharray="3 3" />
+        <line x1="225" y1="100" x2="245" y2="100" stroke="#007BFF" strokeWidth="1.5" strokeDasharray="3 3" />
       </svg>
     );
   }

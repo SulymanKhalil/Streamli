@@ -8,22 +8,22 @@ import Link from "next/link";
    ──────────────────────────────────────────────────────────────────────── */
 const C = {
   /* surfaces */
-  surfaceLowest:     "#ffffff",
-  surfaceLow:        "#eff4ff",
-  surface:           "#e5eeff",
-  surfaceHigh:       "#dce9ff",
-  surfaceHighest:    "#d3e4fe",
+  surfaceLowest:     "#FFFFFF",
+  surfaceLow:        "#F0F7FF",
+  surface:           "#FFFFFF",
+  surfaceHigh:       "#FFFFFF",
+  surfaceHighest:    "#F8FAFC",
   /* text */
-  onSurface:         "#0b1c30",
-  onSurfaceVariant:  "#3f4850",
+  onSurface:         "#0F172A",
+  onSurfaceVariant:  "#475569",
   /* primary */
-  primary:           "#006194",
-  primaryContainer:  "#007bb9",
-  onPrimary:         "#ffffff",
-  onPrimaryContainer:"#fdfcff",
+  primary:           "#0066FF",
+  primaryContainer:  "#0284C7",
+  onPrimary:         "#FFFFFF",
+  onPrimaryContainer:"#FFFFFF",
   /* borders */
-  outlineVariant:    "#bfc7d2",
-  outline:           "#707881",
+  outlineVariant:    "#E2E8F0",
+  outline:           "#CBD5E1",
 };
 
 /* ─────────────────────────────────────────────────────────────────────────

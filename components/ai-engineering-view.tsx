@@ -6,20 +6,20 @@ import Link from "next/link";
    Design token map — exact hex values from the supplied HTML / Tailwind config
    ──────────────────────────────────────────────────────────────────────── */
 const C = {
-  surfaceLowest:    "#ffffff",
-  surfaceLow:       "#eff4ff",
-  surface:          "#f8f9ff",
-  surfaceHigh:      "#dce9ff",
-  surfaceHighest:   "#d3e4fe",
-  surfaceContainer: "#e5eeff",
-  onSurface:        "#0b1c30",
-  onSurfaceVariant: "#3f4850",
-  primary:          "#006194",
-  primaryContainer: "#007bb9",
-  secondary:        "#006591",
-  onPrimary:        "#ffffff",
-  outlineVariant:   "#bfc7d2",
-  outline:          "#707881",
+  surfaceLowest:    "#FFFFFF",
+  surfaceLow:       "#F0F7FF",
+  surface:          "#FFFFFF",
+  surfaceHigh:      "#FFFFFF",
+  surfaceHighest:   "#F8FAFC",
+  surfaceContainer: "#F0F7FF",
+  onSurface:        "#0F172A",
+  onSurfaceVariant: "#475569",
+  primary:          "#0066FF",
+  primaryContainer: "#0284C7",
+  secondary:        "#0066FF",
+  onPrimary:        "#FFFFFF",
+  outlineVariant:   "#E2E8F0",
+  outline:          "#CBD5E1",
 };
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -291,9 +291,9 @@ export function AiEngineeringView() {
           {/* 3-col capability cards */}
           <div className="grid grid-cols-1 md:grid-cols-3" style={{ gap: SP.lg }}>
             {[
-              { num: "01 / REASONING", title: "Autonomous Agent Graphs",   desc: "Multi-step decision trees and self-correcting cognitive loops engineered for enterprise automation and mission execution." },
-              { num: "02 / RETRIEVAL", title: "Hybrid Context Engines",     desc: "Dense vector embeddings synthesized with sparse semantic indexing for sub-millisecond factual verification across billions of records." },
-              { num: "03 / INFERENCE", title: "Edge & Cloud Acceleration",  desc: "Quantized model runtime engines delivering predictable latency benchmarks across heterogeneous hardware infrastructure." },
+              { num: "REASONING", title: "Autonomous Agent Graphs",   desc: "Multi-step decision trees and self-correcting cognitive loops engineered for enterprise automation and mission execution." },
+              { num: "RETRIEVAL", title: "Hybrid Context Engines",     desc: "Dense vector embeddings synthesized with sparse semantic indexing for sub-millisecond factual verification across billions of records." },
+              { num: "INFERENCE", title: "Edge & Cloud Acceleration",  desc: "Quantized model runtime engines delivering predictable latency benchmarks across heterogeneous hardware infrastructure." },
             ].map(({ num, title, desc }) => (
               <div
                 key={num}

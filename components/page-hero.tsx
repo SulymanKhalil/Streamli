@@ -12,7 +12,6 @@ export function PageHero({
   return (
     <section className="page-hero shell">
       <span className="eyebrow">
-        <span className="eyebrow-dot" />
         {kicker}
       </span>
       <h1 className="display">{title}</h1>

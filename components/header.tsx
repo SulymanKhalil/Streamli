@@ -22,7 +22,7 @@ const servicesItems: ContextualItem[] = [
     href: "/services/video-streaming",
   },
   {
-    name: "AI",
+    name: "AI Development",
     desc: "Intelligent solutions with AI",
     href: "/services/ai-solutions",
   },
@@ -138,13 +138,12 @@ export function Header() {
             aria-label="Streamli Home"
             tabIndex={menuOpen ? -1 : 0}
           >
-            <svg width="28" height="28" viewBox="0 0 28 28" fill="none" className="site-logo-icon">
-              <rect width="28" height="28" rx="6" fill="#0284c7" />
-              <path d="M7 14C7 10.134 10.134 7 14 7" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" />
-              <circle cx="14" cy="14" r="2.2" fill="#ffffff" />
-              <path d="M14 21C17.866 21 21 17.866 21 14" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="round" />
-            </svg>
-            <span className="site-brand-text">Streamli</span>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/logo/logo.png"
+              alt="Streamli"
+              style={{ height: "28px", width: "auto", display: "block", objectFit: "contain" }}
+            />
           </Link>
 
           {/* Hamburger / Close Button at Top-Right (Exactly 3 lines morphing into X) */}
@@ -191,7 +190,7 @@ export function Header() {
                   </Link>
                 </li>
 
-                {/* 2. Services (with Right-Side Arrow & Hover Contextual Trigger) */}
+                {/* 2. Services (with Right-Facing Arrow & Hover Contextual Trigger) */}
                 <li
                   className="fullscreen-primary-item"
                   onMouseEnter={() => handleMouseEnter("services")}
@@ -204,12 +203,12 @@ export function Header() {
                   >
                     <span>Services</span>
                     <span className="nav-arrow" aria-hidden="true">
-                      {hoveredMenu === "services" ? "↑" : "↓"}
+                      →
                     </span>
                   </Link>
                 </li>
 
-                {/* 3. About (with Right-Side Arrow & Hover Contextual Trigger) */}
+                {/* 3. About (with Right-Facing Arrow & Hover Contextual Trigger) */}
                 <li
                   className="fullscreen-primary-item"
                   onMouseEnter={() => handleMouseEnter("about")}
@@ -222,7 +221,7 @@ export function Header() {
                   >
                     <span>About</span>
                     <span className="nav-arrow" aria-hidden="true">
-                      {hoveredMenu === "about" ? "↑" : "↓"}
+                      →
                     </span>
                   </Link>
                 </li>

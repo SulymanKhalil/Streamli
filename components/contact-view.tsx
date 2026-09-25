@@ -6,20 +6,20 @@ import { FormEvent, useState } from "react";
    Design token map — exact hex values from the supplied HTML / Tailwind config
    ──────────────────────────────────────────────────────────────────────── */
 const C = {
-  surfaceLowest:    "#ffffff",
-  surfaceLow:       "#eff4ff",
-  surface:          "#f8f9ff",
-  surfaceBright:    "#f8f9ff",
-  surfaceContainer: "#e5eeff",
-  surfaceContainerHigh: "#dce9ff",
-  surfaceContainerHighest: "#d3e4fe",
-  onSurface:        "#0b1c30",
-  onSurfaceVariant: "#3f4850",
-  primary:          "#006194",
-  primaryContainer: "#007bb9",
-  secondary:        "#006591",
-  outlineVariant:   "#bfc7d2",
-  outline:          "#707881",
+  surfaceLowest:    "#FFFFFF",
+  surfaceLow:       "#F0F7FF",
+  surface:          "#FFFFFF",
+  surfaceBright:    "#F8FAFC",
+  surfaceContainer: "#F0F7FF",
+  surfaceContainerHigh: "#F0F7FF",
+  surfaceContainerHighest: "#F8FAFC",
+  onSurface:        "#0F172A",
+  onSurfaceVariant: "#475569",
+  primary:          "#0066FF",
+  primaryContainer: "#0284C7",
+  secondary:        "#0066FF",
+  outlineVariant:   "#E2E8F0",
+  outline:          "#CBD5E1",
 };
 
 /* ─────────────────────────────────────────────────────────────────────────

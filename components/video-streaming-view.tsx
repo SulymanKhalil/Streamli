@@ -6,19 +6,19 @@ import Link from "next/link";
    Design token map — exact hex values from the supplied HTML / Tailwind config
    ──────────────────────────────────────────────────────────────────────── */
 const C = {
-  surfaceLowest:    "#ffffff",
-  surfaceLow:       "#eff4ff",
-  surface:          "#f8f9ff",
-  surfaceHigh:      "#dce9ff",
-  surfaceHighest:   "#d3e4fe",
-  surfaceVariant:   "#d3e4fe",
-  onSurface:        "#0b1c30",
-  onSurfaceVariant: "#3f4850",
-  primary:          "#006194",
-  primaryContainer: "#007bb9",
-  onPrimary:        "#ffffff",
-  outlineVariant:   "#bfc7d2",
-  outline:          "#707881",
+  surfaceLowest:    "#FFFFFF",
+  surfaceLow:       "#F0F7FF",
+  surface:          "#FFFFFF",
+  surfaceHigh:      "#FFFFFF",
+  surfaceHighest:   "#F8FAFC",
+  surfaceVariant:   "#F0F7FF",
+  onSurface:        "#0F172A",
+  onSurfaceVariant: "#475569",
+  primary:          "#0066FF",
+  primaryContainer: "#0284C7",
+  onPrimary:        "#FFFFFF",
+  outlineVariant:   "#E2E8F0",
+  outline:          "#CBD5E1",
 };
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -499,22 +499,22 @@ export function VideoStreamingView() {
           <div className="grid grid-cols-1 md:grid-cols-4" style={{ gap: SP.gutter }}>
             {[
               {
-                num: "01 / Protocols",
+                num: "Protocols",
                 title: "Streaming Protocols",
                 items: ["WebRTC Core", "LL-HLS & HLS", "MPEG-DASH", "RTMP / SRT Ingestion"],
               },
               {
-                num: "02 / Encoders",
+                num: "Encoders",
                 title: "Codecs",
                 items: ["AV1 Next-Gen", "HEVC (H.265)", "AVC (H.264) High Profile", "VP9 & Opus Audio"],
               },
               {
-                num: "03 / Compute",
+                num: "Compute",
                 title: "Edge Ingestion",
                 items: ["Anycast Routing", "GPU Accelerated Nodes", "Dynamic Manifest Rewriting", "Real-Time Watermarking"],
               },
               {
-                num: "04 / Client",
+                num: "Client",
                 title: "Player Frameworks",
                 items: ["React Native & Flutter", "Native iOS AVPlayer", "Android ExoPlayer", "Headless Web SDKs"],
               },

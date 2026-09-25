@@ -1,9 +1,11 @@
+"use client";
+
 import Link from "next/link";
 
 export default function NotFound() {
   return (
     <main className="shell section" style={{ minHeight: "65vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", textAlign: "center" }}>
-      <p className="eyebrow" style={{ color: "#0284c7" }}>
+      <p className="eyebrow" style={{ color: "#0066FF" }}>
         <span className="eyebrow-dot" /> 404 // SIGNAL LOST
       </p>
       <h1 className="display" style={{ margin: "1rem 0" }}>

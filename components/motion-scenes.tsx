@@ -57,7 +57,7 @@ export function HeroScene() {
           </h1>
 
           <p className="hero-cinematic-descriptor">
-            Ultra-low latency streaming infrastructure &amp; custom media product engineering.
+            End-to-end software engineering, custom AI development, and high-concurrency video streaming systems.
           </p>
         </div>
       </div>
@@ -72,7 +72,7 @@ export function ParallaxSection({ children, className = "" }: { children: ReactN
   return <section ref={ref} className={className}>{children}</section>;
 }
 
-export function HorizontalRail({ children, className = "" }: { children: ReactNode; className?: string }) {
+export function HorizontalRail({ children, className = "", id }: { children: ReactNode; className?: string; id?: string }) {
   const outer = useRef<HTMLElement>(null);
   const track = useRef<HTMLDivElement>(null);
 
@@ -132,7 +132,7 @@ export function HorizontalRail({ children, className = "" }: { children: ReactNo
   }, []);
 
   return (
-    <section ref={outer} className={`horizontal-rail ${className}`}>
+    <section ref={outer} id={id} className={`horizontal-rail ${className}`}>
       <div className="horizontal-sticky">
         <div className="horizontal-track-container" style={{ width: "100%", overflow: "hidden" }}>
           <div ref={track} className="horizontal-track">
@@ -180,7 +180,7 @@ export function PinnedStory({ kicker, title, steps, tone = "mint", id }: { kicke
       <div className="pinned-story__sticky">
         <div className="shell pinned-story__grid">
           <div className="pinned-story__intro">
-            <p className="eyebrow"><span className="eyebrow-dot" /> {kicker}</p>
+            <p className="eyebrow">{kicker}</p>
             <h2 className="h2">{title}</h2>
             <div className="story-progress" aria-hidden="true">
               <i />
@@ -195,7 +195,7 @@ export function PinnedStory({ kicker, title, steps, tone = "mint", id }: { kicke
             <span className="story-dot story-dot--three" />
           </div>
           <div className="story-copy">
-            <span className="eyebrow">{step.index} / {step.label || "IN MOTION"}</span>
+            <span className="eyebrow">{step.index}- {step.label || "IN MOTION"}</span>
             <h3>{step.title}</h3>
             <p>{step.text}</p>
             <div className="story-count">
@@ -216,7 +216,7 @@ export function TestimonialStack() {
   const ref = useRef<HTMLElement>(null);
   useSceneProgress(ref, "--stack-progress", "sticky");
   const cards = [
-    ["01", "Fidelity", "A streaming system that never blinks when audience concurrency surges."],
+    ["01", "Fidelity", "A resilient software architecture that never blinks when user traffic surges."],
     ["02", "Precision", "Sub-second live latency matching real-world action with split-second interactive sync."],
     ["03", "Momentum", "Reliable engineering and clean pipelines that keep evolving long after day-one launch."],
   ];
@@ -224,15 +224,15 @@ export function TestimonialStack() {
     <section ref={ref} className="testimonial-stack">
       <div className="testimonial-stack__sticky">
         <div className="shell">
-          <p className="eyebrow eyebrow--dark"><span className="eyebrow-dot" /> Engineering Trust</p>
-          <h2 className="quote">High-throughput streaming platforms built with craft, conviction and zero compromise.</h2>
+          <p className="eyebrow eyebrow--dark">Engineering Trust</p>
+          <h2 className="quote">High-performance digital products built with craft, conviction and zero compromise.</h2>
           <div className="stack-cards">
             {cards.map(([number, title, text], index) => (
               <article className="stack-card" style={{ "--card-index": index } as React.CSSProperties} key={number}>
-                <span style={{ font: '600 11px "DM Mono", monospace', color: "#0284c7" }}>{number} / PRINCIPLE</span>
+                <span style={{ font: '600 11px "DM Mono", monospace', color: "#0066FF" }}>{number}- PRINCIPLE</span>
                 <h3>{title}.</h3>
                 <p>{text}</p>
-                <small>STREAMING PLATFORM PERSPECTIVES</small>
+                <small>SOFTWARE ENGINEERING PERSPECTIVES</small>
               </article>
             ))}
           </div>
@@ -255,10 +255,10 @@ export function ScaleCta() {
               Start a Technical Dialogue
             </p>
             <h2 className="display">
-              Ready to take your video &amp; digital platform <span className="serif">further?</span>
+              Ready to engineer your next digital platform <span className="serif">further?</span>
             </h2>
             <Link className="btn" href="/contact">
-              Discuss Your Streaming Architecture <span className="arrow">→</span>
+              Discuss Your Architecture <span className="arrow">→</span>
             </Link>
           </div>
         </div>

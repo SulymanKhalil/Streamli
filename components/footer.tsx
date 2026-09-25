@@ -9,24 +9,14 @@ export function Footer() {
       <div className="shell">
         {/* Top: Brand Monogram & Thin Horizontal Divider */}
         <div className="footer-top-bar">
-          <Link className="brand" href="/" aria-label="Stream home" style={{ color: "#ffffff" }}>
-            <span className="brand-symbol" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
-                <rect width="28" height="28" fill="#0284c7" />
-                <path d="M7 14C7 10.134 10.134 7 14 7" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="square" />
-                <path d="M10 14C10 11.7909 11.7909 10 14 10" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="square" />
-                <circle cx="14" cy="14" r="2.2" fill="#ffffff" />
-                <path d="M14 18C16.2091 18 18 16.2091 18 14" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="square" />
-                <path d="M14 21C17.866 21 21 17.866 21 14" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="square" />
-              </svg>
-            </span>
-            <span className="brand-text">Stream</span>
+          <Link className="brand" href="/" aria-label="Streamli home">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/logo/logo.png"
+              alt="Streamli"
+              style={{ height: "30px", width: "auto", display: "block", objectFit: "contain" }}
+            />
           </Link>
-
-          <div className="footer-top-status mono">
-            <span className="eyebrow-dot" />
-            <span>ALL EDGE NODES OPERATIONAL // 99.999% SLA</span>
-          </div>
         </div>
 
         <div className="footer-rule" aria-hidden="true" />
@@ -34,7 +24,7 @@ export function Footer() {
         {/* Section Label */}
         <div className="footer-section-label">
           <span className="eyebrow eyebrow--dark">
-            <span className="eyebrow-dot" /> CONTACT US
+            CONTACT US
           </span>
         </div>
 
@@ -43,7 +33,7 @@ export function Footer() {
           {/* Left Side: Large Bold Editorial Statement & Primary CTA */}
           <div className="footer-statement-side">
             <h2 className="footer-statement-title">
-              Have a streaming architecture in mind? Let’s engineer the <span className="serif">future of media</span> together.
+              Have a software architecture in mind? Let’s engineer the <span className="serif">future of media</span> together.
             </h2>
             <div className="footer-statement-action">
               <Link href="/contact" className="btn btn--sky">
@@ -54,6 +44,53 @@ export function Footer() {
 
           {/* Right Side: Compact, Art-Directed Information Area */}
           <div className="footer-info-side">
+            <div className="footer-info-block">
+              <span className="footer-info-heading mono">SERVICES</span>
+              <ul className="footer-info-list">
+                <li>
+                  <Link href="/services/product-development" className="footer-link">
+                    Software Development
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/services/video-streaming" className="footer-link">
+                    Video Streaming
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/services/ai-solutions" className="footer-link">
+                    AI Development
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div className="footer-info-block">
+              <span className="footer-info-heading mono">ABOUT</span>
+              <ul className="footer-info-list">
+                <li>
+                  <Link href="/vision" className="footer-link">
+                    Our Vision
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/philosophy" className="footer-link">
+                    Our Philosophy
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/mission" className="footer-link">
+                    Our Mission
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/team" className="footer-link">
+                    Our Team
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
             <div className="footer-info-block">
               <span className="footer-info-heading mono">CONTACT</span>
               <ul className="footer-info-list">
@@ -67,29 +104,12 @@ export function Footer() {
                     Schedule Architecture Discovery ↗
                   </Link>
                 </li>
+                <li>
+                  <Link href="/careers" className="footer-link">
+                    Careers ↗
+                  </Link>
+                </li>
               </ul>
-            </div>
-
-            <div className="footer-info-block">
-              <span className="footer-info-heading mono">PRACTICE</span>
-              <ul className="footer-info-list">
-                {nav.map((item) => (
-                  <li key={item.label}>
-                    <Link href={item.href} className="footer-link">
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="footer-info-block">
-              <span className="footer-info-heading mono">LOCATION</span>
-              <p className="footer-info-text">
-                Global Distributed Mesh
-                <br />
-                Remote Media Systems Practice
-              </p>
             </div>
 
             <div className="footer-info-block">
@@ -115,17 +135,7 @@ export function Footer() {
         {/* Minimal Bottom Row */}
         <div className="footer-bottom-row">
           <div className="footer-bottom-left">
-            <span>© {new Date().getFullYear()} Streamli Inc. All rights reserved.</span>
-          </div>
-
-          <div className="footer-bottom-center mono">
-            <span>STREAMLI // PLANETARY MEDIA MESH</span>
-          </div>
-
-          <div className="footer-bottom-right">
-            <Link href="/privacy" className="footer-legal-link">Privacy Policy</Link>
-            <span className="footer-legal-sep" aria-hidden="true">/</span>
-            <Link href="/terms" className="footer-legal-link">Terms &amp; Conditions</Link>
+            <span>© {new Date().getFullYear()} Streamli. All rights reserved.</span>
           </div>
         </div>
       </div>

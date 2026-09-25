@@ -1,7 +1,7 @@
 export const site = {
   name: "Stream",
   url: process.env.NEXT_PUBLIC_SITE_URL || "https://stream.example",
-  email: "hello@stream.example",
+  email: "hafizanas663@gmail.com",
   calendlyUrl: process.env.NEXT_PUBLIC_CALENDLY_URL || "",
   tagline: "Ultra-low latency streaming infrastructure & media product engineering.",
   status: "All Edge Nodes Operational (99.999% SLA)",
@@ -28,8 +28,8 @@ export const servicesData: ServiceDetail[] = [
   {
     slug: "ai-solutions",
     index: "01",
-    title: "AI Engineering",
-    shortTitle: "AI Eng",
+    title: "AI Development",
+    shortTitle: "AI Development",
     kicker: "Intelligent Media & Video AI Systems",
     tagline: "Custom machine learning models, video summarization, and intelligent automation.",
     description: "We build bespoke artificial intelligence systems that transform raw video pipelines into smart, searchable, and automated media engines. From real-time sports highlight clipping and speech-to-text indexing to automated compliance and computer vision tracking, we power next-generation streaming experiences.",
@@ -96,10 +96,10 @@ export const servicesData: ServiceDetail[] = [
     ctaText: "Deploy Video Pipeline",
   },
   {
-    slug: "product-development",
+    slug: "software-development",
     index: "03",
     title: "Software Development",
-    shortTitle: "Software Dev",
+    shortTitle: "Software Development",
     kicker: "End-to-End Product Engineering",
     tagline: "Transform high-ambition streaming & digital concepts into market-defining products.",
     description: "We architect, design, and engineer full-lifecycle digital streaming applications. From rapid interactive prototypes to fault-tolerant production ecosystems, we ensure every product decision drives user retention and scalable monetization.",

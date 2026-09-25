@@ -9,18 +9,13 @@ export function Footer() {
       <div className="shell">
         {/* Top: Brand Monogram & Thin Horizontal Divider */}
         <div className="footer-top-bar">
-          <Link className="brand" href="/" aria-label="Stream home" style={{ color: "#ffffff" }}>
-            <span className="brand-symbol" aria-hidden="true">
-              <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
-                <rect width="28" height="28" fill="#0284c7" />
-                <path d="M7 14C7 10.134 10.134 7 14 7" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="square" />
-                <path d="M10 14C10 11.7909 11.7909 10 14 10" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="square" />
-                <circle cx="14" cy="14" r="2.2" fill="#ffffff" />
-                <path d="M14 18C16.2091 18 18 16.2091 18 14" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="square" />
-                <path d="M14 21C17.866 21 21 17.866 21 14" stroke="#ffffff" strokeWidth="2.2" strokeLinecap="square" />
-              </svg>
-            </span>
-            <span className="brand-text">Stream</span>
+          <Link className="brand" href="/" aria-label="Streamli home">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/images/logo/logo.png"
+              alt="Streamli"
+              style={{ height: "30px", width: "auto", display: "block", objectFit: "contain" }}
+            />
           </Link>
         </div>
 
@@ -38,7 +33,7 @@ export function Footer() {
           {/* Left Side: Large Bold Editorial Statement & Primary CTA */}
           <div className="footer-statement-side">
             <h2 className="footer-statement-title">
-              Have a streaming architecture in mind? Let’s engineer the <span className="serif">future of media</span> together.
+              Have a software architecture in mind? Let’s engineer the <span className="serif">future of media</span> together.
             </h2>
             <div className="footer-statement-action">
               <Link href="/contact" className="btn btn--sky">

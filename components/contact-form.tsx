@@ -38,7 +38,7 @@ export function ContactForm() {
             <span style={{ fontSize: "1.2rem" }}>✓</span>
             <span style={{ fontWeight: 700 }}>Signal Received</span>
           </div>
-          <p style={{ margin: 0, color: "#0369a1", fontSize: ".92rem", lineHeight: "1.6" }}>
+          <p style={{ margin: 0, color: "#0066FF", fontSize: ".92rem", lineHeight: "1.6" }}>
             Thank you — your streaming inquiry has reached our engineering team. We will review your requirements and respond within one business day.
           </p>
         </div>

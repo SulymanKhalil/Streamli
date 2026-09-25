@@ -28,8 +28,8 @@ export const servicesData: ServiceDetail[] = [
   {
     slug: "ai-solutions",
     index: "01",
-    title: "AI Engineering",
-    shortTitle: "AI Engineering",
+    title: "AI Development",
+    shortTitle: "AI Development",
     kicker: "Intelligent Media & Video AI Systems",
     tagline: "Custom machine learning models, video summarization, and intelligent automation.",
     description: "We build bespoke artificial intelligence systems that transform raw video pipelines into smart, searchable, and automated media engines. From real-time sports highlight clipping and speech-to-text indexing to automated compliance and computer vision tracking, we power next-generation streaming experiences.",

@@ -55,10 +55,9 @@ export default function Team() {
           </div>
 
           <div className="editorial-team-grid">
-            {/* Member 01: CYO (Anas Ali) */}
+            {/* Member 01: Anas Ali */}
             <article className="team-editorial-card">
               <div className="team-image-frame">
-                <span className="team-card-idx-badge">01</span>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={teamMembers[1].image}
@@ -67,8 +66,9 @@ export default function Team() {
                   decoding="async"
                 />
               </div>
-              <div className="team-meta-stack">
+              <div className="team-floating-badge">
                 <h3 className="team-member-name">{teamMembers[1].name}</h3>
+                <div className="team-badge-divider" />
                 <p className="team-member-role">{teamMembers[1].role}</p>
               </div>
             </article>
@@ -76,7 +76,6 @@ export default function Team() {
             {/* Member 02: Shumail */}
             <article className="team-editorial-card">
               <div className="team-image-frame">
-                <span className="team-card-idx-badge">02</span>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={teamMembers[3].image}
@@ -85,16 +84,16 @@ export default function Team() {
                   decoding="async"
                 />
               </div>
-              <div className="team-meta-stack">
+              <div className="team-floating-badge">
                 <h3 className="team-member-name">{teamMembers[3].name}</h3>
+                <div className="team-badge-divider" />
                 <p className="team-member-role">{teamMembers[3].role}</p>
               </div>
             </article>
 
-            {/* Member 03: Yaqeen Amin (Qadeer Amin) */}
+            {/* Member 03: Qadeer Amin */}
             <article className="team-editorial-card">
               <div className="team-image-frame">
-                <span className="team-card-idx-badge">03</span>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={teamMembers[0].image}
@@ -103,8 +102,9 @@ export default function Team() {
                   decoding="async"
                 />
               </div>
-              <div className="team-meta-stack">
+              <div className="team-floating-badge">
                 <h3 className="team-member-name">{teamMembers[0].name}</h3>
+                <div className="team-badge-divider" />
                 <p className="team-member-role">{teamMembers[0].role}</p>
               </div>
             </article>
@@ -112,7 +112,6 @@ export default function Team() {
             {/* Member 04: Sulyman Khalil */}
             <article className="team-editorial-card">
               <div className="team-image-frame">
-                <span className="team-card-idx-badge">04</span>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={teamMembers[2].image}
@@ -121,8 +120,9 @@ export default function Team() {
                   decoding="async"
                 />
               </div>
-              <div className="team-meta-stack">
+              <div className="team-floating-badge">
                 <h3 className="team-member-name">{teamMembers[2].name}</h3>
+                <div className="team-badge-divider" />
                 <p className="team-member-role">{teamMembers[2].role}</p>
               </div>
             </article>

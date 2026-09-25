@@ -6,19 +6,19 @@ import Link from "next/link";
    Design token map — exact hex values from the supplied HTML / Tailwind config
    ──────────────────────────────────────────────────────────────────────── */
 const C = {
-  surfaceLowest:    "#ffffff",
-  surfaceLow:       "#eff4ff",
-  surface:          "#f8f9ff",
-  surfaceHigh:      "#dce9ff",
-  surfaceHighest:   "#d3e4fe",
-  surfaceVariant:   "#d3e4fe",
-  onSurface:        "#0b1c30",
-  onSurfaceVariant: "#3f4850",
-  primary:          "#006194",
-  primaryContainer: "#007bb9",
-  onPrimary:        "#ffffff",
-  outlineVariant:   "#bfc7d2",
-  outline:          "#707881",
+  surfaceLowest:    "#FFFFFF",
+  surfaceLow:       "#F0F7FF",
+  surface:          "#FFFFFF",
+  surfaceHigh:      "#FFFFFF",
+  surfaceHighest:   "#F8FAFC",
+  surfaceVariant:   "#F0F7FF",
+  onSurface:        "#0F172A",
+  onSurfaceVariant: "#475569",
+  primary:          "#0066FF",
+  primaryContainer: "#0284C7",
+  onPrimary:        "#FFFFFF",
+  outlineVariant:   "#E2E8F0",
+  outline:          "#CBD5E1",
 };
 
 /* ─────────────────────────────────────────────────────────────────────────

@@ -2,6 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useRef, useEffect, useState, useCallback } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 /* ─────────────────────────────────────────────────────────────────────────
    Design token map — exact values from the supplied HTML / Tailwind config
@@ -60,10 +63,336 @@ const SP = {
   marginLg: "5rem",
 };
 
+function TiltImage({ src, alt }: { src: string; alt: string }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [transform, setTransform] = useState("perspective(1000px) rotateX(0deg) rotateY(0deg)");
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (typeof window !== "undefined") {
+      if (window.matchMedia("(hover: none)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+      }
+    }
+    const rect = containerRef.current?.getBoundingClientRect();
+    if (!rect) return;
+
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+
+    // Extremely subtle professional tilt: max ~3.5 degrees
+    const rotateX = (-y * 4.5).toFixed(2);
+    const rotateY = (x * 4.5).toFixed(2);
+
+    setTransform(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`);
+  }, []);
+
+  const handleMouseEnter = useCallback(() => {
+    if (typeof window !== "undefined") {
+      if (window.matchMedia("(hover: none)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+      }
+    }
+    setIsHovered(true);
+  }, []);
+
+  const handleMouseLeave = useCallback(() => {
+    setIsHovered(false);
+    setTransform("perspective(1000px) rotateX(0deg) rotateY(0deg)");
+  }, []);
+
+  return (
+    <div
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className="relative w-full overflow-hidden flex items-center justify-center"
+      style={{
+        aspectRatio: "4/3",
+        backgroundColor: C.surface,
+        border: `1px solid ${C.outlineVariant}`,
+        transform,
+        transformStyle: "preserve-3d",
+        transition: isHovered
+          ? "transform 0.12s ease-out"
+          : "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
+        willChange: "transform",
+      }}
+    >
+      <img
+        className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
+        src={src}
+        alt={alt}
+      />
+      <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: `${C.surfaceLowest}33` }} />
+    </div>
+  );
+}
+
+function SystemTaxonomySection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [inView, setInView] = useState(false);
+  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const items = [
+    { num: "01", title: "Web Applications", desc: "High-throughput, reactive client interfaces operating seamlessly over distributed edge instances." },
+    { num: "02", title: "Enterprise Software", desc: "Monolithic and service-oriented systems engineered for governance, longevity, and zero-loss durability." },
+    { num: "03", title: "Distributed Systems", desc: "Decentralized computational fabrics engineered with deterministic concurrency and mathematically verified integrity." },
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      style={{
+        backgroundColor: C.surfaceLowest,
+        borderBottom: `1px solid ${C.outlineVariant}`,
+        paddingTop: SP.xl,
+        paddingBottom: SP.xl,
+      }}
+      className="w-full md:py-[5rem]"
+    >
+      <div
+        className="max-w-7xl mx-auto"
+        style={{ paddingLeft: SP.marginSm, paddingRight: SP.marginSm }}
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-12" style={{ gap: SP.gutterLg }}>
+
+          {/* Left — typography */}
+          <div className="lg:col-span-6" style={{ display: "flex", flexDirection: "column", gap: SP.lg }}>
+            <div
+              style={{
+                ...T.labelSm,
+                color: C.primary,
+                letterSpacing: inView ? "0.08em" : "0.02em",
+                opacity: inView ? 1 : 0.6,
+                transition: "letter-spacing 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease",
+              }}
+            >
+              SYSTEM TAXONOMY
+            </div>
+
+            <h2
+              style={{
+                ...T.headlineLgMob,
+                color: C.onSurface,
+                opacity: inView ? 1 : 0,
+                transform: inView ? "translateY(0)" : "translateY(16px)",
+                transition: "opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)",
+              }}
+              className="md:text-[2.5rem] md:leading-[3rem] md:tracking-[-0.02em]"
+            >
+              Foundational platforms constructed for mission-critical load.
+            </h2>
+
+            <div
+              style={{
+                paddingTop: SP.md,
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                gap: 0,
+              }}
+            >
+              {/* Top animated divider */}
+              <div
+                style={{
+                  height: "1px",
+                  backgroundColor: C.outlineVariant,
+                  width: "100%",
+                  transformOrigin: "left",
+                  transform: inView ? "scaleX(1)" : "scaleX(0)",
+                  transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0ms",
+                }}
+              />
+
+              {items.map(({ num, title, desc }, i) => {
+                const isHovered = hoveredIdx === i;
+                const staggerDelay = i * 150; // 150ms stagger
+                return (
+                  <div
+                    key={title}
+                    onMouseEnter={() => setHoveredIdx(i)}
+                    onMouseLeave={() => setHoveredIdx(null)}
+                    style={{
+                      position: "relative",
+                      paddingTop: "0.875rem",
+                      paddingBottom: "0.875rem",
+                      paddingLeft: "1rem",
+                      paddingRight: "0.5rem",
+                      cursor: "pointer",
+                      opacity: inView ? 1 : 0,
+                      transform: inView ? "translateY(0)" : "translateY(24px)",
+                      transition: `opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${staggerDelay}ms, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${staggerDelay}ms`,
+                    }}
+                  >
+                    {/* Background Index Number (01, 02, 03) */}
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        position: "absolute",
+                        right: "0.75rem",
+                        top: "50%",
+                        transform: "translateY(-50%)",
+                        fontSize: "3.75rem",
+                        fontWeight: 300,
+                        fontFamily: "'Hanken Grotesk', sans-serif",
+                        lineHeight: 1,
+                        color: "rgba(15, 23, 42, 0.05)",
+                        letterSpacing: "-0.04em",
+                        pointerEvents: "none",
+                        userSelect: "none",
+                        zIndex: 0,
+                      }}
+                    >
+                      {num}
+                    </span>
+
+                    {/* Left Accent Bar on Hover (height 0 -> full height) */}
+                    <span
+                      style={{
+                        position: "absolute",
+                        left: 0,
+                        top: 0,
+                        bottom: 0,
+                        width: "3px",
+                        backgroundColor: C.primary,
+                        transformOrigin: "top",
+                        transform: isHovered ? "scaleY(1)" : "scaleY(0)",
+                        transition: "transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                      }}
+                    />
+
+                    {/* Content wrapper with translateX on hover */}
+                    <div
+                      style={{
+                        position: "relative",
+                        zIndex: 1,
+                        transform: isHovered ? "translateX(8px)" : "translateX(0)",
+                        transition: "transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                      }}
+                    >
+                      <span
+                        style={{
+                          ...T.headlineSm,
+                          color: isHovered ? C.primary : C.onSurface,
+                          display: "block",
+                          transition: "color 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
+                        }}
+                      >
+                        {title}
+                      </span>
+                      <p
+                        style={{
+                          ...T.bodyMd,
+                          color: C.onSurfaceVariant,
+                          marginTop: "0.25rem",
+                        }}
+                      >
+                        {desc}
+                      </p>
+                    </div>
+
+                    {/* Bottom animated divider with blue accent transition on hover */}
+                    <div
+                      style={{
+                        position: "absolute",
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        height: "1px",
+                        backgroundColor: isHovered ? "rgba(0, 102, 255, 0.4)" : C.outlineVariant,
+                        transformOrigin: "left",
+                        transform: inView ? "scaleX(1)" : "scaleX(0)",
+                        transition: `transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${staggerDelay + 100}ms, background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1)`,
+                      }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Right — image with subtle 3D tilt */}
+          <div className="lg:col-span-6">
+            <TiltImage
+              src="/images/software/pexels-googledeepmind-18069694.jpg"
+              alt="Interlocking glass and reinforced titanium building planes"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export function ProductDevelopmentView() {
+  const wrapperRef   = useRef<HTMLDivElement>(null);
+  const section1Ref  = useRef<HTMLDivElement>(null);
+  const section2Ref  = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const wrapper  = wrapperRef.current;
+    const section2 = section2Ref.current;
+    if (!wrapper || !section2) return;
+
+    // Start section 2 fully hidden (clipped upward — curtain from top)
+    gsap.set(section2, { clipPath: "inset(100% 0% 0% 0%)" });
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: wrapper,
+        start: "top top",
+        // Dedicated scroll distance for the transition
+        end: "+=200%",
+        // GSAP pins the wrapper to the viewport and inserts a spacer
+        // so the document does NOT advance past this block until done
+        pin: true,
+        pinSpacing: true,
+        scrub: true,
+        invalidateOnRefresh: true,
+      },
+    });
+
+    tl.to(section2, {
+      clipPath: "inset(0% 0% 0% 0%)",
+      ease: "none",
+    });
+
+    return () => {
+      tl.kill();
+      ScrollTrigger.getAll().forEach((st) => st.kill());
+    };
+  }, []);
+
   return (
     <main
-      style={{ backgroundColor: C.surfaceLowest, color: C.onSurface, WebkitFontSmoothing: "antialiased" }}
+      style={{ backgroundColor: C.surfaceLowest, color: C.onSurface, WebkitFontSmoothing: "antialiased", overflowX: "hidden" }}
       className="w-full"
     >
 
@@ -71,26 +400,25 @@ export function ProductDevelopmentView() {
           1. HERO — 90vh cinematic viewport
       ═══════════════════════════════════════════════════════════════ */}
       <section
-        style={{ borderBottom: `1px solid ${C.outlineVariant}` }}
+        style={{ borderBottom: `1px solid ${C.outlineVariant}`, height: "100vh" }}
         className="relative w-full overflow-hidden flex flex-col justify-end"
         data-section="hero"
       >
-        {/* Background image + overlays */}
+        {/* Background video + overlays */}
+        <video
+          className="absolute inset-0 w-full h-full object-cover"
+          src="/videos/software/6963744-hd_1920_1080_25fps.mp4"
+          autoPlay={true}
+          loop={true}
+          muted={true}
+          playsInline={true}
+          controls={false}
+        />
+        {/* Subtle dark gradient so text stays readable without washing out the video */}
         <div
-          style={{ backgroundColor: C.surface }}
-          className="absolute inset-0 w-full h-[90vh] flex items-center justify-center"
-        >
-          <div
-            className="absolute inset-0 w-full h-full bg-cover bg-center"
-            style={{
-              backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuAW9HRUs4DNLbbVUImO3W2f5KfhhxBgspg6TW1Cz2Rl9X71uFoGx58yXOfJf5pdWI4lXtgBHurWhgkEFcbaSa2N59gky397Ja6vF3PayRCXDi9NMX7RgRwFYnNleH3VsW24ke7FVNOFR-0vNqQKct719tvNODYP9cvSCRYxxHtLhl4ktymxTsDTMZNDUbBMPVMmMEkodOzZ-j0oc5GCgpjrOvjVArhoJ3knjy_KUZyz4ZsVJBONE8SPxQ')`,
-            }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{ backgroundColor: `${C.surfaceLowest}cc`, backdropFilter: "blur(2px)" }}
-          />
-        </div>
+          className="absolute inset-0"
+          style={{ background: "linear-gradient(to top, rgba(0,0,0,0.5) 0%, rgba(0,0,0,0.15) 60%, rgba(0,0,0,0) 100%)" }}
+        />
 
         {/* Hero copy — pb matches margin-lg */}
         <div
@@ -99,17 +427,15 @@ export function ProductDevelopmentView() {
             paddingLeft: SP.marginSm,
             paddingRight: SP.marginSm,
             paddingBottom: SP.marginLg,
-            paddingTop: "calc(90vh - 22rem)",
+            paddingTop: SP.xl,
           }}
         >
           <div className="max-w-4xl" style={{ padding: "0 clamp(0px, 2vw, 0px)" }}>
             {/* Label */}
             <div
               className="inline-flex items-center"
-              style={{ ...T.labelSm, color: C.primary, marginBottom: SP.md, gap: SP.xs }}
+              style={{ ...T.labelSm, color: "#60a5fa", marginBottom: SP.md }}
             >
-              <span>DOMAIN 01</span>
-              <span style={{ width: "0.375rem", height: "0.375rem", backgroundColor: C.primary, display: "inline-block" }} />
               <span>SYSTEM ARCHITECTURE</span>
             </div>
 
@@ -117,7 +443,7 @@ export function ProductDevelopmentView() {
             <h1
               style={{
                 ...T.displayXlMobile,
-                color: C.onSurface,
+                color: "#FFFFFF",
                 marginBottom: SP.md,
               }}
               className="md:text-[4.5rem] md:leading-[5rem]"
@@ -126,87 +452,16 @@ export function ProductDevelopmentView() {
             </h1>
 
             {/* Subline */}
-            <p style={{ ...T.bodyLg, color: C.onSurfaceVariant, maxWidth: "42rem" }}>
+            <p style={{ ...T.bodyLg, color: "rgba(255,255,255,0.8)", maxWidth: "42rem" }}>
               Engineered systems designed with structural permanence. We design and deliver distributed runtime environments, fault-tolerant enterprise layers, and computational infrastructure for complex operational domains.
             </p>
           </div>
         </div>
-
-        {/* Spacer to push section height to 90vh */}
-        <div className="h-[90vh] pointer-events-none" aria-hidden />
       </section>
-
       {/* ═══════════════════════════════════════════════════════════════
-          2. WHAT WE BUILD — Split composition
+          2. WHAT WE BUILD — Split composition (SYSTEM TAXONOMY)
       ═══════════════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          backgroundColor: C.surfaceLowest,
-          borderBottom: `1px solid ${C.outlineVariant}`,
-          paddingTop: SP.xl,
-          paddingBottom: SP.xl,
-        }}
-        className="w-full md:py-[5rem]"
-      >
-        <div
-          className="max-w-7xl mx-auto"
-          style={{ paddingLeft: SP.marginSm, paddingRight: SP.marginSm }}
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-12" style={{ gap: SP.gutterLg }}>
-
-            {/* Left — typography */}
-            <div className="lg:col-span-6" style={{ display: "flex", flexDirection: "column", gap: SP.lg }}>
-              <div style={{ ...T.labelSm, color: C.primary }}>SYSTEM TAXONOMY</div>
-
-              <h2
-                style={{ ...T.headlineLgMob, color: C.onSurface }}
-                className="md:text-[2.5rem] md:leading-[3rem] md:tracking-[-0.02em]"
-              >
-                Foundational platforms constructed for mission-critical load.
-              </h2>
-
-              <div style={{ paddingTop: SP.md, borderTop: `1px solid ${C.outlineVariant}`, display: "flex", flexDirection: "column", gap: 0 }}>
-                {[
-                  { title: "Web Applications",   desc: "High-throughput, reactive client interfaces operating seamlessly over distributed edge instances." },
-                  { title: "Enterprise Software", desc: "Monolithic and service-oriented systems engineered for governance, longevity, and zero-loss durability." },
-                  { title: "Distributed Systems", desc: "Decentralized computational fabrics engineered with deterministic concurrency and mathematically verified integrity." },
-                ].map(({ title, desc }, i) => (
-                  <div
-                    key={title}
-                    style={{
-                      paddingTop: SP.sm,
-                      paddingBottom: SP.sm,
-                      borderTop: i > 0 ? `1px solid ${C.outlineVariant}` : "none",
-                    }}
-                  >
-                    <span style={{ ...T.headlineSm, color: C.onSurface, display: "block" }}>{title}</span>
-                    <p style={{ ...T.bodyMd, color: C.onSurfaceVariant, marginTop: "0.25rem" }}>{desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right — image */}
-            <div className="lg:col-span-6">
-              <div
-                className="relative w-full overflow-hidden flex items-center justify-center"
-                style={{
-                  aspectRatio: "4/3",
-                  backgroundColor: C.surface,
-                  border: `1px solid ${C.outlineVariant}`,
-                }}
-              >
-                <img
-                  className="absolute inset-0 w-full h-full object-cover"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGrUVd23CFxlK8mUn_t3E3U4G-cPxTx4JBex01buZs0PwRUHQ-B39stF3sNkDoWAaRhBACxg5gwooP5fIFVoIEe97fS5t-kFgABpEYmvAN-dcYdD_Qk2TiYVtdEdr5M1oTy9AFf-Wpl9WocjvNKqkIssWMKr6QwklpT-ZsN_uoGdFKkr8AMx6uhP4zaYGhmfEr2-AGCMono_p_mMBUlIQdTQ6TSMNsy243V9j2n2jVSD3kpXn8hGgeIg"
-                  alt="Interlocking glass and reinforced titanium building planes"
-                />
-                <div className="absolute inset-0" style={{ backgroundColor: `${C.surfaceLowest}33` }} />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <SystemTaxonomySection />
 
       {/* ═══════════════════════════════════════════════════════════════
           3. CAPABILITIES — Editorial typographic grid (no media)
@@ -257,133 +512,163 @@ export function ProductDevelopmentView() {
               { num: "06", title: "SaaS Platforms",         desc: "Multi-tenant compute isolation, programmatic cryptographic scoping, and horizontally partitioned database sharding topologies." },
             ].map(({ num, title, desc }) => (
               <div key={num} style={{ display: "flex", flexDirection: "column", gap: SP.xs }}>
-                <div style={{ ...T.labelSm, color: C.primary }}>{num} / DISCIPLINE</div>
+                <div style={{ ...T.labelSm, color: C.primary }}>{num}- DISCIPLINE</div>
                 <h3 style={{ ...T.headlineSm, color: C.onSurface }}>{title}</h3>
                 <p style={{ ...T.bodyMd, color: C.onSurfaceVariant }}>{desc}</p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
 
-            {/* Span-full 07 */}
+
+      {/* ═══════════════════════════════════════════════════════════════
+          4 + 5. PINNED OVERLAY TRANSITION
+          Wrapper is 100vh — GSAP pin:true adds 200vh of scroll distance.
+          Section 2 is revealed over section 1 via a scrubbed clip-path wipe.
+      ═══════════════════════════════════════════════════════════════ */}
+      <div
+        ref={wrapperRef}
+        style={{
+          position: "relative",
+          height: "100vh",
+          // overflow:hidden removed — GSAP pin needs the wrapper to be
+          // fully visible; horizontal overflow is prevented at <main> level
+        }}
+      >
+        {/* ── SECTION 1: PHASE TRANSITION ─────────────────────────────── */}
+        <div
+          ref={section1Ref}
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            overflow: "hidden",
+          }}
+        >
+          {/* Full-cover video */}
+          <video
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+            src="/visuals/software/13161043_3840_2160_30fps.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+
+          {/* Subtle bottom gradient for text legibility */}
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%)",
+            }}
+          />
+
+          {/* Content overlay — bottom-left */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              padding: `${SP.marginLg} ${SP.marginSm}`,
+              maxWidth: "80rem",
+              margin: "0 auto",
+              width: "100%",
+              // make the padding act from left
+              boxSizing: "border-box",
+            }}
+          >
             <div
-              className="md:col-span-2 lg:col-span-3"
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: SP.xs,
-                paddingTop: SP.md,
-                borderTop: `1px solid ${C.outlineVariant}`,
-              }}
+              className="flex flex-col md:flex-row md:items-end justify-between"
+              style={{ gap: SP.md }}
             >
-              <div style={{ ...T.labelSm, color: C.primary }}>07 / DISCIPLINE</div>
-              <h3 style={{ ...T.headlineSm, color: C.onSurface }}>Custom Enterprise Solutions</h3>
-              <p style={{ ...T.bodyMd, color: C.onSurfaceVariant, maxWidth: "48rem" }}>
-                Tailored software fabrics engineered for multinational governance, strict data residency requirements, and legacy bridge integration without operational downtime.
+              <div>
+                <div style={{ ...T.labelSm, color: "#60a5fa", marginBottom: SP.xs }}>
+                  PHASE TRANSITION
+                </div>
+                <h2
+                  style={{ ...T.headlineLgMob, color: "#FFFFFF" }}
+                  className="md:text-[2.5rem] md:leading-[3rem]"
+                >
+                  From Idea to Product
+                </h2>
+              </div>
+              <p style={{ ...T.bodyMd, color: "rgba(255,255,255,0.75)", maxWidth: "28rem" }}>
+                Abstract conceptualization translated through rigorous architectural schemas into executable software artifacts.
               </p>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* ═══════════════════════════════════════════════════════════════
-          4. FROM IDEA TO PRODUCT — Full-width visual 480 px
-      ═══════════════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          backgroundColor: C.surfaceLowest,
-          borderBottom: `1px solid ${C.outlineVariant}`,
-          paddingTop: SP.xl,
-          paddingBottom: SP.xl,
-        }}
-        className="w-full md:py-[5rem]"
-      >
+        {/* ── SECTION 2: TOPOLOGY & INTEGRITY ─────────────────────────── */}
+        {/* Absolute on top of the sticky section; clip-path driven by GSAP */}
         <div
-          className="max-w-7xl mx-auto"
-          style={{ paddingLeft: SP.marginSm, paddingRight: SP.marginSm }}
+          ref={section2Ref}
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100vh",
+            overflow: "hidden",
+            // Initial state set by GSAP: clipPath inset(100% 0% 0% 0%)
+            willChange: "clip-path",
+          }}
         >
-          {/* Row header */}
+          {/* Full-cover video */}
+          <video
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }}
+            src="/visuals/software/14824847_1920_1080_30fps.mp4"
+            autoPlay
+            loop
+            muted
+            playsInline
+          />
+
+          {/* Subtle bottom gradient for text legibility */}
           <div
-            className="flex flex-col md:flex-row md:items-end justify-between"
-            style={{ marginBottom: SP.lg, gap: SP.md }}
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 50%, rgba(0,0,0,0) 100%)",
+            }}
+          />
+
+          {/* Content overlay — bottom-left */}
+          <div
+            style={{
+              position: "absolute",
+              bottom: 0,
+              left: 0,
+              right: 0,
+              padding: `${SP.marginLg} ${SP.marginSm}`,
+              maxWidth: "80rem",
+              margin: "0 auto",
+              width: "100%",
+              boxSizing: "border-box",
+            }}
           >
-            <div>
-              <div style={{ ...T.labelSm, color: C.primary, marginBottom: SP.xs }}>PHASE TRANSITION</div>
+            <div style={{ maxWidth: "48rem" }}>
+              <div style={{ ...T.labelSm, color: "#60a5fa", marginBottom: SP.xs }}>
+                TOPOLOGY &amp; INTEGRITY
+              </div>
               <h2
-                style={{ ...T.headlineLgMob, color: C.onSurface }}
+                style={{ ...T.headlineLgMob, color: "#FFFFFF" }}
                 className="md:text-[2.5rem] md:leading-[3rem]"
               >
-                From Idea to Product
+                Engineering &amp; Architecture
               </h2>
+              <p style={{ ...T.bodyLg, color: "rgba(255,255,255,0.75)", marginTop: SP.sm }}>
+                Systems delineated across decoupled planes: presentation isolation, high-speed routing cores, deterministic data governance, and immutable audit logs.
+              </p>
             </div>
-            <p style={{ ...T.bodyMd, color: C.onSurfaceVariant, maxWidth: "28rem" }}>
-              Abstract conceptualization translated through rigorous architectural schemas into executable software artifacts.
-            </p>
-          </div>
-
-          {/* Visual container */}
-          <div
-            className="relative w-full overflow-hidden flex items-center justify-center"
-            style={{
-              height: "480px",
-              backgroundColor: C.surface,
-              border: `1px solid ${C.outlineVariant}`,
-            }}
-          >
-            <img
-              className="absolute inset-0 w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuTJYlHT9C2Qpw_LVgll9_52DUFogOj2rkGEn-1Bnp2hIcXjPRuGXjU_ixkAVnLR7A4eyj9ccOHaLrtnk4GhB4dpEM-_tP2hk1TaZM6kLrGmgIBVf5cS1QUwW2yIcdevnWbXqVawLnFXl4HAR4squFsjbb6HZc3wKV4Grwh4Vvg32YTH4hWiz2NKeaHgS0bQ3u-mMr96yPeWB67gM-cOnPvwVQAoRWKTh2bCDGkyo-upXtiQLikoYWoQ"
-              alt="Abstract visualization of digital engineering drafting"
-            />
-            <div className="absolute inset-0" style={{ backgroundColor: `${C.surfaceLowest}1a` }} />
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* ═══════════════════════════════════════════════════════════════
-          5. ENGINEERING & ARCHITECTURE — Full-width visual 520 px
-      ═══════════════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          backgroundColor: C.surfaceLowest,
-          borderBottom: `1px solid ${C.outlineVariant}`,
-          paddingTop: SP.xl,
-          paddingBottom: SP.xl,
-        }}
-        className="w-full md:py-[5rem]"
-      >
-        <div
-          className="max-w-7xl mx-auto"
-          style={{ paddingLeft: SP.marginSm, paddingRight: SP.marginSm }}
-        >
-          <div style={{ maxWidth: "48rem", marginBottom: SP.lg }}>
-            <div style={{ ...T.labelSm, color: C.primary, marginBottom: SP.xs }}>TOPOLOGY &amp; INTEGRITY</div>
-            <h2
-              style={{ ...T.headlineLgMob, color: C.onSurface }}
-              className="md:text-[2.5rem] md:leading-[3rem]"
-            >
-              Engineering &amp; Architecture
-            </h2>
-            <p style={{ ...T.bodyLg, color: C.onSurfaceVariant, marginTop: SP.sm }}>
-              Systems delineated across decoupled planes: presentation isolation, high-speed routing cores, deterministic data governance, and immutable audit logs.
-            </p>
-          </div>
-
-          <div
-            className="relative w-full overflow-hidden flex items-center justify-center"
-            style={{
-              height: "520px",
-              backgroundColor: C.surface,
-              border: `1px solid ${C.outlineVariant}`,
-            }}
-          >
-            <img
-              className="absolute inset-0 w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCObYvtJfqGDdCX4ubMaP2SnW-djUIVUN63ItX8sRKMPMl6Qp60Gp7dZ0QjmdlZxcsGXfCeEaqi5FzgbO3y_Aeg0ZXT022AjkyN2vQczmnlosnVOVV1I1gLAtL0H8idKw8P7dMctGCHeMzs60hId8RuLJQiMYvrTdfP6mVJkc9Of_NTqPHAKqww077sHoBViAzpziqyAinBuuhZR_EeUXXb9YJyHU4dsC5JgsSYxBYBc3La-L1cQ8oavQ"
-              alt="Three-dimensional architectural cutaway model of data infrastructure"
-            />
-            <div className="absolute inset-0" style={{ backgroundColor: `${C.surfaceLowest}26` }} />
-          </div>
-        </div>
-      </section>
 
       {/* ═══════════════════════════════════════════════════════════════
           6. TECH STACK — Typography & structured grouping (no media)
@@ -419,9 +704,6 @@ export function ProductDevelopmentView() {
               >
                 Engineered Tooling &amp; Infrastructure
               </h2>
-            </div>
-            <div style={{ ...T.labelMd, color: C.onSurfaceVariant }}>
-              ZERO LEGACY DEBT / STRICT STATIC TYPING
             </div>
           </div>
 
@@ -537,7 +819,7 @@ export function ProductDevelopmentView() {
               >
                 <img
                   className="absolute inset-0 w-full h-full object-cover"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRAESTq5jVDqF8x3hJYjbPeZUtwyMLKCDJ2bX65661ROp7eTC6xSfa3CgNbYscDUISubq01_JHZGQ04yT3sNO-MTFGb-gNZkNV5b8viiv1wUnYtZUlVAw4jGf6oXO9yUNvJ9azazqo_9f9cRliAlYoyGQ5j_u5yeEuzruIIXYybvCXE4rUsFb5IY0eLCpPkO-wfJwNlJBEEXwuPoMWc6kDILctGD7i4X-snRck__I22WdQL9ACOUTm5g"
+                  src="/images/software/pexels-jakubzerdzicki-36496927.jpg"
                   alt="Immaculate industrial design lab with technical blueprints"
                 />
                 <div className="absolute inset-0" style={{ backgroundColor: `${C.surfaceLowest}33` }} />
@@ -614,7 +896,7 @@ export function ProductDevelopmentView() {
                 style={{ ...T.headlineLgMob, color: C.onSurface }}
                 className="md:text-[2.5rem] md:leading-[3rem]"
               >
-                Why Aether Software Systems?
+                Why Streamli?
               </h2>
               <p style={{ ...T.bodyLg, color: C.onSurfaceVariant }}>
                 We design software for organizations where systemic failure is not an option. Our systems are engineered to endure beyond generational hardware cycles.
@@ -653,7 +935,7 @@ export function ProductDevelopmentView() {
               >
                 <img
                   className="absolute inset-0 w-full h-full object-cover"
-                  src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQ6CUrN3vxYPwVvv36GQMQUWluVXJgqUPc-vl9suew0875OXuIc5ivowB8rHM634wfkf3vqEz1hnyn6imSu5G-aGfepQwxj5-7oGx5yDAnDlPqpUtu6Nv_adP5UC-G8dogZqyvFNUawck06J_H_jlnVXY3cZ_sjs86DMbZT5Xk4HKs5dyASvSdYjVQK1pUp-2p7ZQaxhxW4Fd46ZzJmxV8p7cP-I6IP1OPFmM1PDIGy169idpztkOEtA"
+                  src="/images/software/pexels-thisisengineering-3861951.jpg"
                   alt="Crystalline structural columns and balanced cantilevers"
                 />
                 <div className="absolute inset-0" style={{ backgroundColor: `${C.surfaceLowest}33` }} />
@@ -664,172 +946,69 @@ export function ProductDevelopmentView() {
       </section>
 
       {/* ═══════════════════════════════════════════════════════════════
-          9. FAQ — Minimalist accordion
-      ═══════════════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          backgroundColor: C.surfaceLowest,
-          borderBottom: `1px solid ${C.outlineVariant}`,
-          paddingTop: SP.xl,
-          paddingBottom: SP.xl,
-        }}
-        className="w-full md:py-[5rem]"
-      >
-        <div
-          className="max-w-4xl mx-auto"
-          style={{ paddingLeft: SP.marginSm, paddingRight: SP.marginSm }}
-        >
-          <div style={{ marginBottom: SP.xl }}>
-            <div style={{ ...T.labelSm, color: C.primary, marginBottom: SP.xs }}>INQUIRIES &amp; PROTOCOLS</div>
-            <h2
-              style={{ ...T.headlineLgMob, color: C.onSurface }}
-              className="md:text-[2.5rem] md:leading-[3rem]"
-            >
-              Frequently Addressed Questions
-            </h2>
-          </div>
-
-          <div style={{ borderTop: `1px solid ${C.outlineVariant}`, borderBottom: `1px solid ${C.outlineVariant}` }}>
-            {[
-              {
-                q: "How does Aether approach architecture for existing legacy infrastructure?",
-                a: "We employ a strangler-fig pattern orchestrated via non-blocking API proxies. Core legacy assets remain undisturbed while fresh transactional pathways are mapped into decoupled, type-safe services. This guarantees continuous operational uptime while systematically amortizing technical risk.",
-              },
-              {
-                q: "What security and governance standards are built into the development pipeline?",
-                a: "All source trees integrate static binary analysis (SAST), software bill of materials (SBOM) scanning, zero-trust secrets management, and automated SOC2 / ISO-27001 compliance verification at every pull-request boundary.",
-              },
-              {
-                q: "How are intellectual property and source code rights structured?",
-                a: "Complete, unencumbered ownership of all custom software artifacts, infrastructure schemas, and algorithmic models is assigned directly to the client upon milestone delivery. No proprietary vendor lock-in runtime modules are introduced.",
-              },
-              {
-                q: "What is the standard engagement timeline from architectural review to production?",
-                a: "An architectural sprint typically spans two to three weeks, culminating in a mathematically defined specification document and runtime prototype. Full enterprise builds scale from eight to twenty-four weeks depending on distributed cluster complexity.",
-              },
-            ].map(({ q, a }) => (
-              <details
-                key={q}
-                className="group"
-                style={{
-                  borderTop: `1px solid ${C.outlineVariant}`,
-                  paddingTop: SP.md,
-                  paddingBottom: SP.md,
-                  cursor: "pointer",
-                }}
-              >
-                <summary
-                  style={{
-                    ...T.headlineSm,
-                    color: C.onSurface,
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    listStyle: "none",
-                  }}
-                  className="focus:outline-none"
-                >
-                  <span>{q}</span>
-                  <span
-                    className="material-symbols-outlined group-open:rotate-180 transition-transform duration-200"
-                    style={{ color: C.outline, marginLeft: SP.md, flexShrink: 0 }}
-                  >
-                    expand_more
-                  </span>
-                </summary>
-                <div style={{ ...T.bodyMd, color: C.onSurfaceVariant, paddingTop: SP.md, lineHeight: "1.75rem" }}>
-                  {a}
-                </div>
-              </details>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══════════════════════════════════════════════════════════════
           10. FINAL CTA — Full-width visual with consultation prompt
       ═══════════════════════════════════════════════════════════════ */}
       <section
         style={{
-          backgroundColor: C.surfaceLowest,
-          paddingTop: SP.xl,
-          paddingBottom: SP.xl,
+          position: "relative",
+          width: "100%",
+          minHeight: "520px",
           overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          paddingTop: "5rem",
+          paddingBottom: "5rem",
         }}
-        className="relative w-full md:py-[5rem]"
+        className="w-full relative"
       >
+        {/* Background image — full section coverage */}
+        <img
+          className="absolute inset-0 w-full h-full object-cover"
+          src="/images/software/pexels-merlin-14314638.jpg"
+          alt="Advanced computational laboratory pavilion"
+        />
+        {/* Subtle dark overlay for text contrast without washing out the image */}
         <div
-          className="max-w-7xl mx-auto"
+          className="absolute inset-0"
+          style={{
+            background: "linear-gradient(90deg, rgba(15,23,42,0.85) 0%, rgba(15,23,42,0.65) 45%, rgba(15,23,42,0.3) 100%)",
+          }}
+        />
+
+        {/* CTA content */}
+        <div
+          className="relative z-20 w-full max-w-7xl mx-auto"
           style={{ paddingLeft: SP.marginSm, paddingRight: SP.marginSm }}
         >
-          <div
-            className="relative w-full flex flex-col justify-center overflow-hidden"
-            style={{
-              minHeight: "460px",
-              backgroundColor: C.surface,
-              border: `1px solid ${C.outlineVariant}`,
-              padding: SP.lg,
-            }}
-          >
-            {/* Background image */}
-            <img
-              className="absolute inset-0 w-full h-full object-cover"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuDLqz5PKFVue378N6rpWPdxhJ9FSdamHeqGPtmBFV12sEcsJJk4h8BEjPwQGLjKvPwmrWD6clkKq7GOeARcQCowR8Me44SovrgPyWcIP3E5Xg5o3v0Ox84aYG6bIPzlVAobxIFp4-AY6h1PluuzlxK4WSTVF465jIAKScZqbLLhXpX_-2tcDldmHLRFkeEvErqfAjPQ3N0got5ufaHEL7UK2Rg82N3IRZOLEhdN_a8h-CCm7KRKnrGhZg"
-              alt="Advanced computational laboratory pavilion"
-            />
-            <div
-              className="absolute inset-0"
-              style={{ backgroundColor: `${C.surfaceLowest}d9`, backdropFilter: "blur(1px)" }}
-            />
+          <div style={{ maxWidth: "44rem" }}>
+            <h2
+              style={{ ...T.displayLgMobile, color: "#FFFFFF", marginBottom: SP.sm }}
+              className="md:text-[2.5rem] md:leading-[3rem] md:tracking-[-0.02em]"
+            >
+              Ready to engineer your next technological milestone?
+            </h2>
+            <p style={{ ...T.bodyLg, color: "rgba(255,255,255,0.85)", marginBottom: SP.lg }}>
+              Engage with our principal software architects. We analyze your requirements and construct a resilient technical roadmap.
+            </p>
 
-            {/* CTA content */}
-            <div className="relative z-20" style={{ maxWidth: "42rem" }}>
-              <div style={{ ...T.labelSm, color: C.primary, marginBottom: SP.sm }}>INITIATION</div>
-              <h2
-                style={{ ...T.displayLgMobile, color: C.onSurface, marginBottom: SP.sm }}
-                className="md:text-[2.5rem] md:leading-[3rem] md:tracking-[-0.02em]"
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center" style={{ gap: "1rem" }}>
+              <Link
+                href="/contact"
+                className="cta-btn inline-flex justify-center items-center"
+                style={{
+                  padding: "0.75rem 1.55rem",
+                  fontSize: "0.84rem",
+                  fontWeight: 700,
+                  letterSpacing: "-0.01em",
+                  backgroundColor: C.primary,
+                  color: "#FFFFFF",
+                  border: `1px solid ${C.primary}`,
+                  textDecoration: "none",
+                }}
               >
-                Ready to engineer your next technological milestone?
-              </h2>
-              <p style={{ ...T.bodyLg, color: C.onSurfaceVariant, marginBottom: SP.lg }}>
-                Engage with our principal software architects. We analyze your requirements and construct a resilient technical roadmap.
-              </p>
-
-              <div className="flex flex-col sm:flex-row" style={{ gap: SP.md }}>
-                <Link
-                  href="/contact"
-                  className="inline-flex justify-center items-center transition-colors duration-200"
-                  style={{
-                    ...T.labelMd,
-                    backgroundColor: C.primary,
-                    color: C.onPrimary,
-                    paddingTop: SP.sm,
-                    paddingBottom: SP.sm,
-                    paddingLeft: SP.lg,
-                    paddingRight: SP.lg,
-                    borderRadius: "0.5rem",
-                  }}
-                >
-                  Contact Us
-                </Link>
-                <Link
-                  href="/contact"
-                  className="inline-flex justify-center items-center transition-colors duration-150"
-                  style={{
-                    ...T.labelMd,
-                    backgroundColor: C.surfaceLowest,
-                    color: C.onSurface,
-                    border: `1px solid ${C.outlineVariant}`,
-                    paddingTop: SP.sm,
-                    paddingBottom: SP.sm,
-                    paddingLeft: SP.lg,
-                    paddingRight: SP.lg,
-                    borderRadius: "0.5rem",
-                  }}
-                >
-                  Schedule Architecture Review
-                </Link>
-              </div>
+                Schedule Architecture Review
+               </Link>
             </div>
           </div>
         </div>

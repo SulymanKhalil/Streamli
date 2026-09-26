@@ -208,6 +208,19 @@ button, input, select, textarea { font: inherit; }
 }
 
 /* =========================================================================
+   SOFTWARE DEV PAGE — CONTACT SECTION CTA BUTTONS
+   Square corners by default; smooth pill on hover
+   ========================================================================= */
+.cta-btn {
+  border-radius: 0px !important;
+  transition: border-radius 0.25s ease, background-color 150ms;
+  cursor: pointer;
+}
+.cta-btn:hover {
+  border-radius: 16px !important;
+}
+
+/* =========================================================================
    PREMIUM VERTICAL SIDE NAVIGATION & SPATIAL MATRIX SYSTEM
 /* =========================================================================
    CLEAN TOP NAVBAR & RIGHT-SLIDING FULL-SCREEN EDITORIAL NAVIGATION
@@ -231,10 +244,20 @@ button, input, select, textarea { font: inherit; }
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(0, 102, 255, 0.12);
+  /* Smooth slide transition */
+  transform: translateY(0);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+/* Slide navbar fully above the viewport on scroll-down */
+.site-header.nav-hidden {
+  transform: translateY(-100%);
 }
 
 .site-header-inner {
-  width: min(1320px, calc(100% - 64px));
+  /* Reduced from min(1320px) to min(980px) — approx 25% narrower */
+  width: min(980px, calc(100% - 64px));
   margin: 0 auto;
   height: 100%;
   display: flex;

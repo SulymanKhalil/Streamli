@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Shield, Cog, Layers } from "lucide-react";
+import { Shield, Cog, Layers, Cpu, Globe, Building2, Network } from "lucide-react";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -13,22 +13,22 @@ import { motion, useScroll, useTransform } from "framer-motion";
    ──────────────────────────────────────────────────────────────────────── */
 const C = {
   /* surfaces */
-  surfaceLowest:     "#FFFFFF",
-  surfaceLow:        "#F0F7FF",
-  surface:           "#FFFFFF",
-  surfaceHigh:       "#FFFFFF",
-  surfaceHighest:    "#F8FAFC",
+  surfaceLowest: "#FFFFFF",
+  surfaceLow: "#F0F7FF",
+  surface: "#FFFFFF",
+  surfaceHigh: "#FFFFFF",
+  surfaceHighest: "#F8FAFC",
   /* text */
-  onSurface:         "#0F172A",
-  onSurfaceVariant:  "#475569",
+  onSurface: "#0F172A",
+  onSurfaceVariant: "#475569",
   /* primary */
-  primary:           "#0066FF",
-  primaryContainer:  "#0284C7",
-  onPrimary:         "#FFFFFF",
-  onPrimaryContainer:"#FFFFFF",
+  primary: "#0066FF",
+  primaryContainer: "#0284C7",
+  onPrimary: "#FFFFFF",
+  onPrimaryContainer: "#FFFFFF",
   /* borders */
-  outlineVariant:    "#E2E8F0",
-  outline:           "#CBD5E1",
+  outlineVariant: "#E2E8F0",
+  outline: "#CBD5E1",
 };
 
 /* ─────────────────────────────────────────────────────────────────────────
@@ -36,115 +36,38 @@ const C = {
    the HTML Tailwind config)
    ──────────────────────────────────────────────────────────────────────── */
 const T = {
-  displayXl:       { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "4.5rem",    lineHeight: "5rem",    letterSpacing: "-0.035em", fontWeight: 600 },
-  displayXlMobile: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "2.75rem",   lineHeight: "3.25rem", letterSpacing: "-0.025em", fontWeight: 600 },
-  displayLg:       { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "3.5rem",    lineHeight: "4rem",    letterSpacing: "-0.03em",  fontWeight: 600 },
-  displayLgMobile: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "2.25rem",   lineHeight: "2.75rem", letterSpacing: "-0.02em",  fontWeight: 600 },
-  headlineLg:      { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "2.5rem",    lineHeight: "3rem",    letterSpacing: "-0.02em",  fontWeight: 500 },
-  headlineLgMob:   { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "1.75rem",   lineHeight: "2.25rem", letterSpacing: "-0.015em", fontWeight: 500 },
-  headlineMd:      { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "1.75rem",   lineHeight: "2.25rem", letterSpacing: "-0.015em", fontWeight: 500 },
-  headlineSm:      { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "1.25rem",   lineHeight: "1.75rem", letterSpacing: "-0.01em",  fontWeight: 500 },
-  bodyLg:          { fontFamily: "'Inter', sans-serif",          fontSize: "1.125rem",  lineHeight: "1.75rem", letterSpacing: "-0.011em", fontWeight: 400 },
-  bodyMd:          { fontFamily: "'Inter', sans-serif",          fontSize: "0.9375rem", lineHeight: "1.5rem",  letterSpacing: "-0.006em", fontWeight: 400 },
-  labelMd:         { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "0.75rem",   lineHeight: "1rem",    letterSpacing: "0.06em",   fontWeight: 600 },
-  labelSm:         { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "0.6875rem", lineHeight: "0.875rem",letterSpacing: "0.08em",   fontWeight: 600 },
+  displayXl: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "4.5rem", lineHeight: "5rem", letterSpacing: "-0.035em", fontWeight: 600 },
+  displayXlMobile: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "2.75rem", lineHeight: "3.25rem", letterSpacing: "-0.025em", fontWeight: 600 },
+  displayLg: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "3.5rem", lineHeight: "4rem", letterSpacing: "-0.03em", fontWeight: 600 },
+  displayLgMobile: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "2.25rem", lineHeight: "2.75rem", letterSpacing: "-0.02em", fontWeight: 600 },
+  headlineLg: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "2.5rem", lineHeight: "3rem", letterSpacing: "-0.02em", fontWeight: 500 },
+  headlineLgMob: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "1.75rem", lineHeight: "2.25rem", letterSpacing: "-0.015em", fontWeight: 500 },
+  headlineMd: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "1.75rem", lineHeight: "2.25rem", letterSpacing: "-0.015em", fontWeight: 500 },
+  headlineSm: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "1.25rem", lineHeight: "1.75rem", letterSpacing: "-0.01em", fontWeight: 500 },
+  bodyLg: { fontFamily: "'Inter', sans-serif", fontSize: "1.125rem", lineHeight: "1.75rem", letterSpacing: "-0.011em", fontWeight: 400 },
+  bodyMd: { fontFamily: "'Inter', sans-serif", fontSize: "0.9375rem", lineHeight: "1.5rem", letterSpacing: "-0.006em", fontWeight: 400 },
+  labelMd: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "0.75rem", lineHeight: "1rem", letterSpacing: "0.06em", fontWeight: 600 },
+  labelSm: { fontFamily: "'Hanken Grotesk', sans-serif", fontSize: "0.6875rem", lineHeight: "0.875rem", letterSpacing: "0.08em", fontWeight: 600 },
 };
 
 /* Spacing from the HTML config */
 const SP = {
-  xs:  "0.25rem",
-  sm:  "0.5rem",
-  md:  "1rem",
-  lg:  "1.75rem",
-  xl:  "3rem",
-  gutter:   "1.5rem",
+  xs: "0.25rem",
+  sm: "0.5rem",
+  md: "1rem",
+  lg: "1.75rem",
+  xl: "3rem",
+  gutter: "1.5rem",
   gutterLg: "2.5rem",
   gutterSm: "1rem",
   marginSm: "1.25rem",
-  margin:   "3rem",
+  margin: "3rem",
   marginLg: "5rem",
 };
-
-function TaxonomyImageCard({ src, alt, inView }: { src: string; alt: string; inView: boolean }) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <div className="relative w-full max-w-[560px] mx-auto" style={{ padding: "12px" }}>
-      {/* Sky Blue gradient background layer behind (rotated +2deg, inset relative to image) */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          inset: "0px",
-          borderRadius: "20px",
-          background: "linear-gradient(135deg, rgba(109, 201, 240, 0.75) 0%, rgba(127, 203, 239, 0.65) 50%, rgba(0, 102, 255, 0.55) 100%)",
-          transform: inView ? "rotate(2deg)" : "rotate(2deg) translateY(30px) scale(0.95)",
-          opacity: inView ? (isHovered ? 1 : 0.85) : 0,
-          transition: "opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s",
-          zIndex: 0,
-          pointerEvents: "none",
-        }}
-      />
-
-      {/* Floating Card Image Wrapper */}
-      <div
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        style={{
-          position: "relative",
-          zIndex: 1,
-          width: "100%",
-          aspectRatio: "4/3",
-          borderRadius: "16px",
-          overflow: "hidden",
-          backgroundColor: "#0F172A",
-          border: `1px solid rgba(56, 189, 248, 0.3)`,
-          boxShadow: isHovered
-            ? "0 32px 64px -12px rgba(14, 165, 233, 0.28), 0 20px 40px -10px rgba(15, 23, 42, 0.2)"
-            : "0 25px 50px -12px rgba(14, 165, 233, 0.2), 0 15px 30px -10px rgba(15, 23, 42, 0.15)",
-          transform: !inView
-            ? "translateY(30px) scale(0.95) rotate(-1deg)"
-            : isHovered
-            ? "translateY(0) scale(1) rotate(0deg)"
-            : "translateY(0) scale(1) rotate(-1deg)",
-          opacity: inView ? 1 : 0,
-          transition: !inView
-            ? "none"
-            : isHovered
-            ? "transform 0.4s ease, box-shadow 0.4s ease"
-            : "opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s, box-shadow 0.4s ease",
-          willChange: "transform, opacity",
-          cursor: "pointer",
-        }}
-      >
-        <img
-          className="w-full h-full object-cover select-none pointer-events-none"
-          src={src}
-          alt={alt}
-          style={{
-            borderRadius: "16px",
-            transform: isHovered ? "scale(1.08)" : "scale(1)",
-            transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
-            willChange: "transform",
-          }}
-        />
-        {/* Subtle glass / sky blue tone overlay */}
-        <div
-          className="absolute inset-0 pointer-events-none"
-          style={{
-            borderRadius: "16px",
-            backgroundColor: "rgba(14, 165, 233, 0.08)",
-          }}
-        />
-      </div>
-    </div>
-  );
-}
 
 function SystemTaxonomySection() {
   const sectionRef = useRef<HTMLElement>(null);
   const [inView, setInView] = useState(false);
-  const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -170,9 +93,24 @@ function SystemTaxonomySection() {
   }, []);
 
   const items = [
-    { num: "01", title: "Web Applications", desc: "High-throughput, reactive client interfaces operating seamlessly over distributed edge instances." },
-    { num: "02", title: "Enterprise Software", desc: "Monolithic and service-oriented systems engineered for governance, longevity, and zero-loss durability." },
-    { num: "03", title: "Distributed Systems", desc: "Decentralized computational fabrics engineered with deterministic concurrency and mathematically verified integrity." },
+    {
+      num: "01",
+      title: "Web Applications",
+      desc: "High-throughput, reactive client interfaces operating seamlessly over distributed edge instances.",
+      icon: <Globe className="w-5 h-5 text-blue-600" />,
+    },
+    {
+      num: "02",
+      title: "Enterprise Software",
+      desc: "Monolithic and service-oriented systems engineered for governance, longevity, and zero-loss durability.",
+      icon: <Building2 className="w-5 h-5 text-purple-600" />,
+    },
+    {
+      num: "03",
+      title: "Distributed Systems",
+      desc: "Decentralized computational fabrics engineered with deterministic concurrency and mathematically verified integrity.",
+      icon: <Network className="w-5 h-5 text-indigo-600" />,
+    },
   ];
 
   return (
@@ -190,171 +128,366 @@ function SystemTaxonomySection() {
         className="max-w-7xl mx-auto"
         style={{ paddingLeft: SP.marginSm, paddingRight: SP.marginSm }}
       >
-        <div className="grid grid-cols-1 lg:grid-cols-12" style={{ gap: SP.gutterLg }}>
-
-          {/* Left — typography */}
-          <div className="lg:col-span-6" style={{ display: "flex", flexDirection: "column", gap: SP.lg }}>
-            <div
-              style={{
-                ...T.labelSm,
-                color: C.primary,
-                letterSpacing: inView ? "0.08em" : "0.02em",
-                opacity: inView ? 1 : 0.6,
-                transition: "letter-spacing 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease",
-              }}
-            >
-              SYSTEM TAXONOMY
-            </div>
-
-            <h2
-              style={{
-                ...T.headlineLgMob,
-                color: C.onSurface,
-                opacity: inView ? 1 : 0,
-                transform: inView ? "translateY(0)" : "translateY(16px)",
-                transition: "opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)",
-              }}
-              className="md:text-[2.5rem] md:leading-[3rem] md:tracking-[-0.02em]"
-            >
-              Foundational platforms constructed for mission-critical load.
-            </h2>
-
-            <div
-              style={{
-                paddingTop: SP.md,
-                position: "relative",
-                display: "flex",
-                flexDirection: "column",
-                gap: 0,
-              }}
-            >
-              {/* Top animated divider */}
-              <div
-                style={{
-                  height: "1px",
-                  backgroundColor: C.outlineVariant,
-                  width: "100%",
-                  transformOrigin: "left",
-                  transform: inView ? "scaleX(1)" : "scaleX(0)",
-                  transition: "transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0ms",
-                }}
-              />
-
-              {items.map(({ num, title, desc }, i) => {
-                const isHovered = hoveredIdx === i;
-                const staggerDelay = i * 150; // 150ms stagger
-                return (
-                  <div
-                    key={title}
-                    onMouseEnter={() => setHoveredIdx(i)}
-                    onMouseLeave={() => setHoveredIdx(null)}
-                    style={{
-                      position: "relative",
-                      paddingTop: "0.875rem",
-                      paddingBottom: "0.875rem",
-                      paddingLeft: "1rem",
-                      paddingRight: "0.5rem",
-                      cursor: "pointer",
-                      opacity: inView ? 1 : 0,
-                      transform: inView ? "translateY(0)" : "translateY(24px)",
-                      transition: `opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${staggerDelay}ms, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${staggerDelay}ms`,
-                    }}
-                  >
-                    {/* Background Index Number (01, 02, 03) */}
-                    <span
-                      aria-hidden="true"
-                      style={{
-                        position: "absolute",
-                        right: "0.75rem",
-                        top: "50%",
-                        transform: "translateY(-50%)",
-                        fontSize: "3.75rem",
-                        fontWeight: 300,
-                        fontFamily: "'Hanken Grotesk', sans-serif",
-                        lineHeight: 1,
-                        color: "rgba(15, 23, 42, 0.05)",
-                        letterSpacing: "-0.04em",
-                        pointerEvents: "none",
-                        userSelect: "none",
-                        zIndex: 0,
-                      }}
-                    >
-                      {num}
-                    </span>
-
-                    {/* Left Accent Bar on Hover (height 0 -> full height) */}
-                    <span
-                      style={{
-                        position: "absolute",
-                        left: 0,
-                        top: 0,
-                        bottom: 0,
-                        width: "3px",
-                        backgroundColor: C.primary,
-                        transformOrigin: "top",
-                        transform: isHovered ? "scaleY(1)" : "scaleY(0)",
-                        transition: "transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                      }}
-                    />
-
-                    {/* Content wrapper with translateX on hover */}
-                    <div
-                      style={{
-                        position: "relative",
-                        zIndex: 1,
-                        transform: isHovered ? "translateX(8px)" : "translateX(0)",
-                        transition: "transform 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                      }}
-                    >
-                      <span
-                        style={{
-                          ...T.headlineSm,
-                          color: isHovered ? C.primary : C.onSurface,
-                          display: "block",
-                          transition: "color 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
-                        }}
-                      >
-                        {title}
-                      </span>
-                      <p
-                        style={{
-                          ...T.bodyMd,
-                          color: C.onSurfaceVariant,
-                          marginTop: "0.25rem",
-                        }}
-                      >
-                        {desc}
-                      </p>
-                    </div>
-
-                    {/* Bottom animated divider with blue accent transition on hover */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        height: "1px",
-                        backgroundColor: isHovered ? "rgba(0, 102, 255, 0.4)" : C.outlineVariant,
-                        transformOrigin: "left",
-                        transform: inView ? "scaleX(1)" : "scaleX(0)",
-                        transition: `transform 0.6s cubic-bezier(0.16, 1, 0.3, 1) ${staggerDelay + 100}ms, background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1)`,
-                      }}
-                    />
-                  </div>
-                );
-              })}
-            </div>
+        {/* 1. TOP: Full-width Header */}
+        <div className="w-full flex flex-col gap-3 mb-8 md:mb-12">
+          <div
+            style={{
+              ...T.labelSm,
+              color: C.primary,
+              letterSpacing: inView ? "0.08em" : "0.02em",
+              opacity: inView ? 1 : 0.6,
+              transition: "letter-spacing 0.8s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.8s ease",
+            }}
+          >
+            SYSTEM TAXONOMY
           </div>
 
-          {/* Right — image with floating card & hover zoom */}
-          <div className="lg:col-span-6 flex items-center justify-center">
-            <TaxonomyImageCard
-              src="/images/software/pexels-googledeepmind-18069694.jpg"
-              alt="Interlocking glass and reinforced titanium building planes"
-              inView={inView}
+          <h2
+            style={{
+              ...T.headlineLgMob,
+              color: C.onSurface,
+              opacity: inView ? 1 : 0,
+              transform: inView ? "translateY(0)" : "translateY(16px)",
+              transition: "opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1)",
+            }}
+            className="md:text-[2.5rem] md:leading-[3rem] md:tracking-[-0.02em] max-w-3xl"
+          >
+            Foundational platforms constructed for mission-critical load.
+          </h2>
+
+          {/* Full-width animated divider */}
+          <div
+            style={{
+              height: "1px",
+              backgroundColor: C.outlineVariant,
+              width: "100%",
+              marginTop: "0.5rem",
+              transformOrigin: "left",
+              transform: inView ? "scaleX(1)" : "scaleX(0)",
+              transition: "transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 100ms",
+            }}
+          />
+        </div>
+
+        {/* 2. PART A: Connected Architecture Diagram (Decorative SVG Visual) */}
+        <div className="w-full relative overflow-hidden py-4 mb-8 md:mb-10 flex justify-center items-center">
+          <svg
+            viewBox="0 0 900 180"
+            className="w-full max-w-4xl h-auto max-h-[180px] overflow-visible select-none pointer-events-none"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              {/* Central Node Gradient */}
+              <linearGradient id="centralNodeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#2563eb" />
+                <stop offset="100%" stopColor="#7c3aed" />
+              </linearGradient>
+            </defs>
+
+            {/* Connecting Bezier Paths — aligned to column centers (150, 450, 750) */}
+            {/* Path 1: Central (450, 35) -> Node 1 (150, 135) */}
+            <motion.path
+              d="M 450 35 C 300 35, 150 70, 150 135"
+              stroke="rgba(37, 99, 235, 0.35)"
+              strokeWidth="1.5"
+              strokeDasharray="6 4"
+              initial={{ pathLength: 0 }}
+              animate={inView ? { pathLength: 1 } : { pathLength: 0 }}
+              transition={{ duration: 1.2, ease: "easeInOut" }}
             />
-          </div>
+            {/* Path 2: Central (450, 35) -> Node 2 (450, 135) */}
+            <motion.path
+              d="M 450 35 C 450 65, 450 95, 450 135"
+              stroke="rgba(37, 99, 235, 0.35)"
+              strokeWidth="1.5"
+              strokeDasharray="6 4"
+              initial={{ pathLength: 0 }}
+              animate={inView ? { pathLength: 1 } : { pathLength: 0 }}
+              transition={{ duration: 1.2, ease: "easeInOut", delay: 0.15 }}
+            />
+            {/* Path 3: Central (450, 35) -> Node 3 (750, 135) */}
+            <motion.path
+              d="M 450 35 C 600 35, 750 70, 750 135"
+              stroke="rgba(37, 99, 235, 0.35)"
+              strokeWidth="1.5"
+              strokeDasharray="6 4"
+              initial={{ pathLength: 0 }}
+              animate={inView ? { pathLength: 1 } : { pathLength: 0 }}
+              transition={{ duration: 1.2, ease: "easeInOut", delay: 0.3 }}
+            />
+
+            {/* Traveling Pulse Dots along connecting paths */}
+            {inView && (
+              <>
+                <circle r="4" fill="#2563eb" filter="drop-shadow(0px 0px 6px #2563eb)">
+                  <animateMotion path="M 450 35 C 300 35, 150 70, 150 135" dur="3.5s" repeatCount="indefinite" />
+                </circle>
+                <circle r="4" fill="#7c3aed" filter="drop-shadow(0px 0px 6px #7c3aed)">
+                  <animateMotion path="M 450 35 C 450 65, 450 95, 450 135" dur="3.8s" repeatCount="indefinite" />
+                </circle>
+                <circle r="4" fill="#3b82f6" filter="drop-shadow(0px 0px 6px #3b82f6)">
+                  <animateMotion path="M 450 35 C 600 35, 750 70, 750 135" dur="4.2s" repeatCount="indefinite" />
+                </circle>
+              </>
+            )}
+
+            {/* Central Core Node (~60px diameter) */}
+            <motion.g
+              initial={{ scale: 0, opacity: 0 }}
+              animate={inView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+              transition={{ duration: 0.5, delay: 0.2, type: "spring", stiffness: 200 }}
+              style={{ transformOrigin: "450px 35px" }}
+            >
+              <circle cx="450" cy="35" r="36" fill="rgba(37, 99, 235, 0.12)" />
+              <circle cx="450" cy="35" r="30" fill="url(#centralNodeGradient)" filter="drop-shadow(0px 6px 16px rgba(37, 99, 235, 0.35))" />
+              <foreignObject x="436" y="21" width="28" height="28">
+                <div className="w-full h-full flex items-center justify-center text-white">
+                  <Cpu className="w-5 h-5" />
+                </div>
+              </foreignObject>
+            </motion.g>
+
+            {/* Outer Node 1 (Web Applications - Column 1 Center) */}
+            <motion.g
+              initial={{ scale: 0, opacity: 0 }}
+              animate={inView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+              transition={{ duration: 0.4, delay: 0.5 }}
+              style={{ transformOrigin: "150px 135px" }}
+            >
+              <circle cx="150" cy="135" r="20" fill="#FFFFFF" stroke="#2563eb" strokeWidth="2" filter="drop-shadow(0px 4px 10px rgba(37, 99, 235, 0.2))" />
+              <circle cx="150" cy="135" r="6" fill="#2563eb" />
+            </motion.g>
+
+            {/* Outer Node 2 (Enterprise Software - Column 2 Center) */}
+            <motion.g
+              initial={{ scale: 0, opacity: 0 }}
+              animate={inView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+              transition={{ duration: 0.4, delay: 0.65 }}
+              style={{ transformOrigin: "450px 135px" }}
+            >
+              <circle cx="450" cy="135" r="20" fill="#FFFFFF" stroke="#7c3aed" strokeWidth="2" filter="drop-shadow(0px 4px 10px rgba(124, 58, 237, 0.2))" />
+              <circle cx="450" cy="135" r="6" fill="#7c3aed" />
+            </motion.g>
+
+            {/* Outer Node 3 (Distributed Systems - Column 3 Center) */}
+            <motion.g
+              initial={{ scale: 0, opacity: 0 }}
+              animate={inView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+              transition={{ duration: 0.4, delay: 0.8 }}
+              style={{ transformOrigin: "750px 135px" }}
+            >
+              <circle cx="750" cy="135" r="20" fill="#FFFFFF" stroke="#3b82f6" strokeWidth="2" filter="drop-shadow(0px 4px 10px rgba(59, 130, 246, 0.2))" />
+              <circle cx="750" cy="135" r="6" fill="#3b82f6" />
+            </motion.g>
+          </svg>
+        </div>
+
+        {/* 3. PART B: Bento Grid Cards (Equal 3-column single row layout) */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch w-full">
+          {/* Bento Card 1: Web Applications */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -4, boxShadow: "0 20px 40px -8px rgba(37, 99, 235, 0.15)", borderColor: "rgba(37, 99, 235, 0.25)" }}
+            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1], delay: 0.3 }}
+            className="h-full relative overflow-hidden flex flex-col justify-between p-7 sm:p-8 rounded-[20px]"
+            style={{
+              background: "linear-gradient(145deg, #ffffff, #f8fafc)",
+              border: "1px solid rgba(37, 99, 235, 0.08)",
+              boxShadow: "0 4px 20px -4px rgba(15, 23, 42, 0.03)",
+            }}
+          >
+            {/* Background Circuit Pattern */}
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 pointer-events-none opacity-[0.05]"
+              style={{
+                backgroundImage: `radial-gradient(circle at 1px 1px, rgba(37, 99, 235, 0.8) 1px, transparent 0)`,
+                backgroundSize: "20px 20px",
+              }}
+            />
+
+            {/* Connecting Node Dot in Corner */}
+            <div className="absolute top-5 right-5 flex items-center gap-2 pointer-events-none z-10">
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-500/40" />
+              <span className="w-6 h-[1px] bg-gradient-to-r from-blue-500/30 to-transparent" />
+              <div className="w-3 h-3 rounded-full bg-gradient-to-br from-[#2563eb] to-[#7c3aed] shadow-sm flex items-center justify-center">
+                <div className="w-1 h-1 rounded-full bg-white" />
+              </div>
+            </div>
+
+            {/* Card Content */}
+            <div className="relative z-10">
+              <div className="w-9 h-9 rounded-lg bg-blue-50 flex items-center justify-center mb-4 text-blue-600 border border-blue-100/80">
+                {items[0].icon}
+              </div>
+              <h3 style={{ ...T.headlineSm, color: C.onSurface }} className="font-semibold mb-2">
+                {items[0].title}
+              </h3>
+              <p style={{ ...T.bodyMd, color: C.onSurfaceVariant }}>
+                {items[0].desc}
+              </p>
+            </div>
+
+            {/* Faint Background Number (01) */}
+            <span
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                right: "1.25rem",
+                bottom: "0.75rem",
+                fontSize: "4.5rem",
+                fontWeight: 300,
+                fontFamily: "'Hanken Grotesk', sans-serif",
+                lineHeight: 1,
+                color: "rgba(15, 23, 42, 0.04)",
+                letterSpacing: "-0.04em",
+                pointerEvents: "none",
+                userSelect: "none",
+                zIndex: 0,
+              }}
+            >
+              {items[0].num}
+            </span>
+          </motion.div>
+
+          {/* Bento Card 2: Enterprise Software */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -4, boxShadow: "0 20px 40px -8px rgba(37, 99, 235, 0.15)", borderColor: "rgba(37, 99, 235, 0.25)" }}
+            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1], delay: 0.45 }}
+            className="h-full relative overflow-hidden flex flex-col justify-between p-7 sm:p-8 rounded-[20px]"
+            style={{
+              background: "linear-gradient(145deg, #ffffff, #f8fafc)",
+              border: "1px solid rgba(37, 99, 235, 0.08)",
+              boxShadow: "0 4px 20px -4px rgba(15, 23, 42, 0.03)",
+            }}
+          >
+            {/* Background Circuit Pattern */}
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 pointer-events-none opacity-[0.05]"
+              style={{
+                backgroundImage: `radial-gradient(circle at 1px 1px, rgba(124, 58, 237, 0.8) 1px, transparent 0)`,
+                backgroundSize: "20px 20px",
+              }}
+            />
+
+            {/* Connecting Node Dot in Corner */}
+            <div className="absolute top-5 right-5 flex items-center gap-2 pointer-events-none z-10">
+              <span className="w-1.5 h-1.5 rounded-full bg-purple-500/40" />
+              <span className="w-6 h-[1px] bg-gradient-to-r from-purple-500/30 to-transparent" />
+              <div className="w-3 h-3 rounded-full bg-gradient-to-br from-[#7c3aed] to-[#3b82f6] shadow-sm flex items-center justify-center">
+                <div className="w-1 h-1 rounded-full bg-white" />
+              </div>
+            </div>
+
+            {/* Card Content */}
+            <div className="relative z-10">
+              <div className="w-9 h-9 rounded-lg bg-purple-50 flex items-center justify-center mb-4 text-purple-600 border border-purple-100/80">
+                {items[1].icon}
+              </div>
+              <h3 style={{ ...T.headlineSm, color: C.onSurface }} className="font-semibold mb-2">
+                {items[1].title}
+              </h3>
+              <p style={{ ...T.bodyMd, color: C.onSurfaceVariant }}>
+                {items[1].desc}
+              </p>
+            </div>
+
+            {/* Faint Background Number (02) */}
+            <span
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                right: "1.25rem",
+                bottom: "0.75rem",
+                fontSize: "4.5rem",
+                fontWeight: 300,
+                fontFamily: "'Hanken Grotesk', sans-serif",
+                lineHeight: 1,
+                color: "rgba(15, 23, 42, 0.04)",
+                letterSpacing: "-0.04em",
+                pointerEvents: "none",
+                userSelect: "none",
+                zIndex: 0,
+              }}
+            >
+              {items[1].num}
+            </span>
+          </motion.div>
+
+          {/* Bento Card 3: Distributed Systems */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            whileHover={{ y: -4, boxShadow: "0 20px 40px -8px rgba(37, 99, 235, 0.15)", borderColor: "rgba(37, 99, 235, 0.25)" }}
+            transition={{ duration: 0.6, ease: [0.4, 0, 0.2, 1], delay: 0.6 }}
+            className="h-full relative overflow-hidden flex flex-col justify-between p-7 sm:p-8 rounded-[20px]"
+            style={{
+              background: "linear-gradient(145deg, #ffffff, #f8fafc)",
+              border: "1px solid rgba(37, 99, 235, 0.08)",
+              boxShadow: "0 4px 20px -4px rgba(15, 23, 42, 0.03)",
+            }}
+          >
+            {/* Background Circuit Pattern */}
+            <div
+              aria-hidden="true"
+              className="absolute inset-0 pointer-events-none opacity-[0.05]"
+              style={{
+                backgroundImage: `radial-gradient(circle at 1px 1px, rgba(59, 130, 246, 0.8) 1px, transparent 0)`,
+                backgroundSize: "20px 20px",
+              }}
+            />
+
+            {/* Connecting Node Dot in Corner */}
+            <div className="absolute top-5 right-5 flex items-center gap-2 pointer-events-none z-10">
+              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500/40" />
+              <span className="w-6 h-[1px] bg-gradient-to-r from-indigo-500/30 to-transparent" />
+              <div className="w-3 h-3 rounded-full bg-gradient-to-br from-[#3b82f6] to-[#2563eb] shadow-sm flex items-center justify-center">
+                <div className="w-1 h-1 rounded-full bg-white" />
+              </div>
+            </div>
+
+            {/* Card Content */}
+            <div className="relative z-10">
+              <div className="w-9 h-9 rounded-lg bg-indigo-50 flex items-center justify-center mb-4 text-indigo-600 border border-indigo-100/80">
+                {items[2].icon}
+              </div>
+              <h3 style={{ ...T.headlineSm, color: C.onSurface }} className="font-semibold mb-2">
+                {items[2].title}
+              </h3>
+              <p style={{ ...T.bodyMd, color: C.onSurfaceVariant }}>
+                {items[2].desc}
+              </p>
+            </div>
+
+            {/* Faint Background Number (03) */}
+            <span
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                right: "1.25rem",
+                bottom: "0.75rem",
+                fontSize: "4.5rem",
+                fontWeight: 300,
+                fontFamily: "'Hanken Grotesk', sans-serif",
+                lineHeight: 1,
+                color: "rgba(15, 23, 42, 0.04)",
+                letterSpacing: "-0.04em",
+                pointerEvents: "none",
+                userSelect: "none",
+                zIndex: 0,
+              }}
+            >
+              {items[2].num}
+            </span>
+          </motion.div>
         </div>
       </div>
     </section>
@@ -423,10 +556,10 @@ function CapabilityCard({
         transition: !inView
           ? "none"
           : hasAnimatedIn
-          ? "box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease"
-          : isHovered
-          ? "box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease"
-          : `opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${staggerDelay}ms, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${staggerDelay}ms, box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1)`,
+            ? "box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease"
+            : isHovered
+              ? "box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease"
+              : `opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${staggerDelay}ms, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${staggerDelay}ms, box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1)`,
         cursor: "pointer",
         display: "flex",
         flexDirection: "column",
@@ -854,39 +987,85 @@ function TechStackSection() {
 
 function DevelopmentProcessSection() {
   const sectionRef = useRef<HTMLElement>(null);
-  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const fillLineRef = useRef<HTMLDivElement>(null);
   const [activeStep, setActiveStep] = useState(0);
 
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start center", "end center"],
-  });
-
-  const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
-
   useEffect(() => {
-    const handleScroll = () => {
-      const viewportCenter = window.innerHeight / 2;
-      let closestIdx = 0;
-      let minDistance = Infinity;
+    if (typeof window === "undefined") return;
+    gsap.registerPlugin(ScrollTrigger);
 
-      stepRefs.current.forEach((el, idx) => {
-        if (!el) return;
-        const rect = el.getBoundingClientRect();
-        const stepCenter = rect.top + rect.height / 2;
-        const distance = Math.abs(stepCenter - viewportCenter);
-        if (distance < minDistance) {
-          minDistance = distance;
-          closestIdx = idx;
+    const el = sectionRef.current;
+    if (!el) return;
+
+    // Kill any existing triggers tied to this section element to prevent duplicates
+    ScrollTrigger.getAll().forEach((trigger) => {
+      if (trigger.vars.trigger === el) {
+        trigger.kill();
+      }
+    });
+
+    const mm = gsap.matchMedia();
+
+    mm.add(
+      {
+        isDesktop: "(min-width: 768px)",
+        isMobile: "(max-width: 767px)",
+      },
+      (context) => {
+        const { isDesktop } = context.conditions as { isDesktop: boolean; isMobile: boolean };
+
+        if (isDesktop) {
+          ScrollTrigger.create({
+            trigger: el,
+            start: "top top",
+            end: "+=2000",
+            pin: true,
+            pinSpacing: true,
+            refreshPriority: 1,
+            anticipatePin: 1,
+            invalidateOnRefresh: true,
+            scrub: 1,
+            onUpdate: (self) => {
+              const p = self.progress;
+              const step = Math.min(3, Math.floor(p * 4));
+              setActiveStep(step);
+              if (fillLineRef.current) {
+                fillLineRef.current.style.height = `${p * 100}%`;
+              }
+            },
+          });
+        } else {
+          ScrollTrigger.create({
+            trigger: el,
+            start: "top center",
+            end: "bottom center",
+            scrub: 0.5,
+            onUpdate: (self) => {
+              const p = self.progress;
+              const step = Math.min(3, Math.floor(p * 4));
+              setActiveStep(step);
+              if (fillLineRef.current) {
+                fillLineRef.current.style.height = `${p * 100}%`;
+              }
+            },
+          });
         }
-      });
 
-      setActiveStep(closestIdx);
+        // Refresh ScrollTrigger after mount and layout settlement
+        setTimeout(() => {
+          ScrollTrigger.sort();
+          ScrollTrigger.refresh();
+        }, 100);
+      }
+    );
+
+    const handleLoad = () => ScrollTrigger.refresh();
+    window.addEventListener("load", handleLoad);
+
+    return () => {
+      window.removeEventListener("load", handleLoad);
+      mm.revert();
     };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   const steps = [
@@ -918,186 +1097,192 @@ function DevelopmentProcessSection() {
       style={{
         position: "relative",
         overflow: "hidden",
-        backgroundColor: C.surface,
-        paddingTop: SP.xl,
-        paddingBottom: SP.xl,
+        minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        boxSizing: "border-box",
+        zIndex: 10,
+        paddingTop: "5rem",
+        paddingBottom: "5rem",
       }}
-      className="w-full md:py-[5rem]"
+      className="w-full md:min-h-screen relative"
     >
+      {/* 100% Width x 100% Height Background Video */}
+      <video
+        className="absolute inset-0 w-full h-full object-cover"
+        src="/visuals/software/3129595-uhd_3840_2160_30fps.mp4"
+        autoPlay={true}
+        loop={true}
+        muted={true}
+        playsInline={true}
+        controls={false}
+      />
+
+      {/* Subtle dark gradient overlay behind glass for crystal readability */}
       <div
-        className="max-w-7xl mx-auto relative z-10"
-        style={{ paddingLeft: SP.marginSm, paddingRight: SP.marginSm }}
-      >
-        <div className="grid grid-cols-1 lg:grid-cols-12 items-start" style={{ gap: SP.gutterLg }}>
-          {/* Sticky Image left */}
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background: "linear-gradient(to top, rgba(15, 23, 42, 0.85) 0%, rgba(15, 23, 42, 0.6) 50%, rgba(15, 23, 42, 0.85) 100%)",
+        }}
+      />
+
+      {/* Glass Content Box */}
+      <div className="max-w-[1280px] w-full mx-auto relative z-10 px-6 sm:px-8 md:px-10">
+        <div
+          className="w-full relative overflow-hidden methodology-card p-6 sm:p-8 md:py-8 md:px-12"
+          style={{
+            background: "rgba(255, 255, 255, 0.08)",
+            backdropFilter: "blur(24px) saturate(180%)",
+            WebkitBackdropFilter: "blur(24px) saturate(180%)",
+            border: "1px solid rgba(255, 255, 255, 0.18)",
+            borderRadius: "24px",
+            boxShadow:
+              "0 8px 32px rgba(0, 0, 0, 0.37), inset 0 1px 0 rgba(255, 255, 255, 0.15), inset 0 0 40px rgba(255, 255, 255, 0.02)",
+          }}
+        >
+          {/* Top-edge glass highlight pseudo-element replacement */}
           <div
-            className="lg:col-span-6 w-full lg:sticky lg:top-[100px]"
-            style={{ alignSelf: "flex-start" }}
-          >
-            <div
-              className="relative w-full overflow-hidden flex items-center justify-center"
-              style={{
-                aspectRatio: "4/5",
-                borderRadius: "16px",
-                backgroundColor: C.surface,
-                border: `1px solid ${C.outlineVariant}`,
-                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)",
-              }}
+            aria-hidden="true"
+            style={{
+              position: "absolute",
+              top: 0,
+              left: "10%",
+              right: "10%",
+              height: "1px",
+              background: "linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)",
+              pointerEvents: "none",
+            }}
+          />
+
+          {/* Header text */}
+          <div style={{ marginBottom: "1.25rem" }}>
+            <div style={{ ...T.labelSm, color: "#60a5fa", marginBottom: "0.35rem" }}>METHODOLOGY</div>
+            <h2
+              style={{ ...T.headlineLgMob, color: "#FFFFFF", marginBottom: "0.5rem" }}
+              className="md:text-[2.25rem] md:leading-[2.75rem]"
             >
-              <img
-                className="absolute inset-0 w-full h-full object-cover"
-                src="/images/software/pexels-jakubzerdzicki-36496927.jpg"
-                alt="Immaculate industrial design lab with technical blueprints"
-                style={{ borderRadius: "16px" }}
-              />
-              <div
-                className="absolute inset-0 pointer-events-none"
-                style={{ backgroundColor: `${C.surfaceLowest}22`, borderRadius: "16px" }}
-              />
-            </div>
+              Our Development Process
+            </h2>
+            <p style={{ ...T.bodyMd, color: "rgba(255, 255, 255, 0.85)", marginTop: "0.25rem" }}>
+              Engineering milestones executed through absolute predictability, mathematical proofs, and unyielding code quality parameters.
+            </p>
           </div>
 
-          {/* Steps right */}
-          <div className="lg:col-span-6" style={{ display: "flex", flexDirection: "column", gap: SP.lg }}>
-            <div>
-              <div style={{ ...T.labelSm, color: C.primary, marginBottom: SP.xs }}>METHODOLOGY</div>
-              <h2
-                style={{ ...T.headlineLgMob, color: C.onSurface }}
-                className="md:text-[2.5rem] md:leading-[3rem]"
-              >
-                Our Development Process
-              </h2>
-              <p style={{ ...T.bodyMd, color: C.onSurfaceVariant, marginTop: SP.sm }}>
-                Engineering milestones executed through absolute predictability, mathematical proofs, and unyielding code quality parameters.
-              </p>
-            </div>
-
-            {/* Timeline container */}
+          {/* Timeline container */}
+          <div
+            className="relative"
+            style={{
+              borderTop: "1px solid rgba(255, 255, 255, 0.12)",
+              paddingTop: "0.875rem",
+              paddingLeft: "2rem",
+              display: "flex",
+              flexDirection: "column",
+              gap: 0,
+            }}
+          >
+            {/* Base Timeline Line */}
             <div
-              className="relative"
+              aria-hidden="true"
               style={{
-                borderTop: `1px solid ${C.outlineVariant}`,
-                paddingTop: SP.md,
-                paddingLeft: "2rem",
-                display: "flex",
-                flexDirection: "column",
-                gap: 0,
+                position: "absolute",
+                left: "8px",
+                top: "1.25rem",
+                bottom: "1.25rem",
+                width: "2px",
+                backgroundColor: "rgba(255, 255, 255, 0.12)",
+                borderRadius: "9999px",
+              }}
+            />
+
+            {/* Animated Progress Overlay Line */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: "absolute",
+                left: "8px",
+                top: "1.25rem",
+                bottom: "1.25rem",
+                width: "2px",
+                overflow: "hidden",
+                borderRadius: "9999px",
               }}
             >
-              {/* Base Timeline Line */}
               <div
-                aria-hidden="true"
+                ref={fillLineRef}
                 style={{
-                  position: "absolute",
-                  left: "8px",
-                  top: "2.25rem",
-                  bottom: "2.5rem",
-                  width: "2px",
-                  backgroundColor: "rgba(0, 0, 0, 0.08)",
+                  width: "100%",
+                  height: "0%",
+                  backgroundColor: "#60a5fa",
                   borderRadius: "9999px",
+                  boxShadow: "0 0 10px rgba(96, 165, 250, 0.6)",
                 }}
               />
+            </div>
 
-              {/* Animated Progress Overlay Line */}
-              <div
-                aria-hidden="true"
-                style={{
-                  position: "absolute",
-                  left: "8px",
-                  top: "2.25rem",
-                  bottom: "2.5rem",
-                  width: "2px",
-                  overflow: "hidden",
-                  borderRadius: "9999px",
-                }}
-              >
-                <motion.div
+            {steps.map(({ num, title, desc }, i) => {
+              const isActive = activeStep === i;
+
+              return (
+                <div
+                  key={num}
                   style={{
-                    width: "100%",
-                    height: lineHeight,
-                    backgroundColor: "#2563eb",
-                    borderRadius: "9999px",
+                    display: "flex",
+                    alignItems: "flex-start",
+                    gap: "1.25rem",
+                    paddingTop: "0.75rem",
+                    paddingBottom: "0.75rem",
+                    borderTop: i > 0 ? "1px solid rgba(255, 255, 255, 0.08)" : "none",
+                    transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                   }}
-                />
-              </div>
-
-              {steps.map(({ num, title, desc }, i) => {
-                const isActive = activeStep === i;
-
-                return (
-                  <div
-                    key={num}
-                    ref={(el) => {
-                      stepRefs.current[i] = el;
-                    }}
+                >
+                  <span
                     style={{
-                      display: "flex",
-                      gap: SP.md,
-                      paddingTop: i > 0 ? SP.md : "0.5rem",
-                      paddingBottom: SP.md,
-                      borderTop: i > 0 ? `1px solid ${C.outlineVariant}66` : "none",
-                      transition: "all 0.4s ease",
+                      ...T.labelMd,
+                      color: isActive ? "#60a5fa" : "rgba(255, 255, 255, 0.45)",
+                      opacity: isActive ? 1 : 0.6,
+                      transform: isActive ? "scale(1.1)" : "scale(1)",
+                      transformOrigin: "left center",
+                      lineHeight: "1.4",
+                      paddingTop: "0.1rem",
+                      flexShrink: 0,
+                      fontWeight: isActive ? 700 : 600,
+                      transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                      display: "inline-block",
                     }}
                   >
-                    <span
+                    {num}
+                  </span>
+                  <div style={{ flex: 1 }}>
+                    <h4
                       style={{
-                        ...T.labelMd,
-                        color: isActive ? "#2563eb" : C.primary,
-                        opacity: isActive ? 1 : 0.4,
-                        transform: isActive ? "scale(1.15)" : "scale(1)",
-                        transformOrigin: "left center",
-                        paddingTop: "0.125rem",
-                        flexShrink: 0,
-                        fontWeight: isActive ? 700 : 600,
-                        transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                        display: "inline-block",
+                        ...T.headlineSm,
+                        color: isActive ? "#FFFFFF" : "rgba(255, 255, 255, 0.55)",
+                        fontWeight: isActive ? 600 : 500,
+                        lineHeight: "1.4",
+                        transition: "color 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
                       }}
                     >
-                      {num}
-                    </span>
-                    <div>
-                      <h4
-                        style={{
-                          ...T.headlineSm,
-                          color: isActive ? C.onSurface : "#94A3B8",
-                          fontWeight: isActive ? 600 : 500,
-                          transition: "color 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                        }}
-                      >
-                        {title}
-                      </h4>
-                      <p
-                        style={{
-                          ...T.bodyMd,
-                          color: isActive ? C.onSurfaceVariant : "#94A3B8",
-                          marginTop: "0.25rem",
-                          transition: "color 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
-                        }}
-                      >
-                        {desc}
-                      </p>
-                    </div>
+                      {title}
+                    </h4>
+                    <p
+                      style={{
+                        ...T.bodyMd,
+                        color: isActive ? "rgba(255, 255, 255, 0.85)" : "rgba(255, 255, 255, 0.35)",
+                        marginTop: "0.25rem",
+                        transition: "color 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                      }}
+                    >
+                      {desc}
+                    </p>
                   </div>
-                );
-              })}
-            </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
-
-      {/* Cross-section background transition gradient into Why Streamli */}
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          bottom: 0,
-          left: 0,
-          right: 0,
-          height: "120px",
-          background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(238,242,255,0.7) 60%, #eef2ff 100%)",
-          pointerEvents: "none",
-        }}
-      />
     </section>
   );
 }
@@ -1235,11 +1420,62 @@ function WhyStreamliSection() {
             </div>
           </div>
 
-          {/* Image right with subtle parallax */}
-          <div className="lg:col-span-6">
-            <motion.div style={{ y: parallaxY }} className="w-full">
+          {/* Image right with subtle parallax & decorative organic blobs */}
+          <div className="lg:col-span-6 relative p-4 sm:p-8 md:p-12">
+            <motion.div style={{ y: parallaxY }} className="relative w-full">
+              {/* Blob 1: Top-Left (blue to purple gradient) */}
+              <motion.div
+                className="absolute -top-8 -left-8 md:-top-14 md:-left-14 w-28 h-28 md:w-44 md:h-44 opacity-50 blur-[2px] pointer-events-none z-0"
+                animate={{ y: [0, -15, 0], x: [0, 10, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <svg
+                  className="w-full h-full"
+                  viewBox="0 0 200 200"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <defs>
+                    <linearGradient id="blobGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#2563eb" />
+                      <stop offset="100%" stopColor="#7c3aed" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    fill="url(#blobGradient1)"
+                    d="M45.3,-58.5C58.5,-49.5,68.6,-34.8,72.5,-18.5C76.4,-2.2,74.1,15.7,66.1,30.6C58.1,45.5,44.4,57.4,28.8,64.5C13.2,71.6,-4.3,73.9,-20.9,70C-37.5,66.1,-53.2,56,-62.8,41.6C-72.4,27.2,-75.9,8.5,-72.6,-8.2C-69.3,-24.9,-59.2,-39.6,-46,-49C-32.8,-58.4,-16.4,-62.5,0.7,-63.4C17.8,-64.3,35.6,-62,45.3,-58.5Z"
+                    transform="translate(100 100)"
+                  />
+                </svg>
+              </motion.div>
+
+              {/* Blob 2: Bottom-Right (light blue to lavender accent) */}
+              <motion.div
+                className="absolute -bottom-6 -right-6 md:-bottom-12 md:-right-12 w-24 h-24 md:w-36 md:h-36 opacity-40 blur-[2px] pointer-events-none z-0"
+                animate={{ y: [0, 15, 0], x: [0, -10, 0] }}
+                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+              >
+                <svg
+                  className="w-full h-full"
+                  viewBox="0 0 200 200"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <defs>
+                    <linearGradient id="blobGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" stopColor="#60a5fa" />
+                      <stop offset="100%" stopColor="#a78bfa" />
+                    </linearGradient>
+                  </defs>
+                  <path
+                    fill="url(#blobGradient2)"
+                    d="M39.5,-51.8C50.3,-42.6,57.4,-29.4,61.8,-14.9C66.2,-0.4,67.9,15.4,62.1,28.5C56.3,41.6,43,52,28.2,59.6C13.4,67.2,-2.9,72,-18.6,69.3C-34.3,66.6,-49.4,56.4,-58.9,42.5C-68.4,28.6,-72.3,11,-70.2,-5.3C-68.1,-21.6,-60,-36.6,-48.1,-46.3C-36.2,-56,-18.1,-60.4,-1.1,-58.9C15.9,-57.4,31.8,-49,39.5,-51.8Z"
+                    transform="translate(100 100)"
+                  />
+                </svg>
+              </motion.div>
+
+              {/* Main image container */}
               <div
-                className="relative w-full overflow-hidden flex items-center justify-center"
+                className="relative z-10 w-full overflow-hidden flex items-center justify-center"
                 style={{
                   aspectRatio: "4/3",
                   borderRadius: "16px",
@@ -1271,14 +1507,14 @@ function WhyStreamliSection() {
 }
 
 export function ProductDevelopmentView() {
-  const wrapperRef   = useRef<HTMLDivElement>(null);
-  const section1Ref  = useRef<HTMLDivElement>(null);
-  const section2Ref  = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const section1Ref = useRef<HTMLDivElement>(null);
+  const section2Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
-    const wrapper  = wrapperRef.current;
+    const wrapper = wrapperRef.current;
     const section2 = section2Ref.current;
     if (!wrapper || !section2) return;
 
@@ -1289,25 +1525,33 @@ export function ProductDevelopmentView() {
       scrollTrigger: {
         trigger: wrapper,
         start: "top top",
-        // Dedicated scroll distance for the transition
         end: "+=200%",
-        // GSAP pins the wrapper to the viewport and inserts a spacer
-        // so the document does NOT advance past this block until done
         pin: true,
         pinSpacing: true,
+        refreshPriority: 2,
+        anticipatePin: 1,
         scrub: true,
         invalidateOnRefresh: true,
       },
     });
 
+    // 1. Hold PHASE TRANSITION overlay visible for the first half of the pin distance
+    tl.to({}, { duration: 1 });
+
+    // 2. Reveal TOPOLOGY & INTEGRITY overlay over PHASE TRANSITION during the second half
     tl.to(section2, {
       clipPath: "inset(0% 0% 0% 0%)",
       ease: "none",
+      duration: 1,
     });
+
+    setTimeout(() => {
+      ScrollTrigger.sort();
+      ScrollTrigger.refresh();
+    }, 100);
 
     return () => {
       tl.kill();
-      ScrollTrigger.getAll().forEach((st) => st.kill());
     };
   }, []);
 
@@ -1610,7 +1854,7 @@ export function ProductDevelopmentView() {
                 }}
               >
                 Schedule Architecture Review
-               </Link>
+              </Link>
             </div>
           </div>
         </div>

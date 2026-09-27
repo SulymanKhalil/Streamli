@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Shield, Cog, Layers } from "lucide-react";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 /* ─────────────────────────────────────────────────────────────────────────
    Design token map — exact values from the supplied HTML / Tailwind config
@@ -63,69 +65,78 @@ const SP = {
   marginLg: "5rem",
 };
 
-function TiltImage({ src, alt }: { src: string; alt: string }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [transform, setTransform] = useState("perspective(1000px) rotateX(0deg) rotateY(0deg)");
+function TaxonomyImageCard({ src, alt, inView }: { src: string; alt: string; inView: boolean }) {
   const [isHovered, setIsHovered] = useState(false);
 
-  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
-    if (typeof window !== "undefined") {
-      if (window.matchMedia("(hover: none)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        return;
-      }
-    }
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (!rect) return;
-
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-
-    // Extremely subtle professional tilt: max ~3.5 degrees
-    const rotateX = (-y * 4.5).toFixed(2);
-    const rotateY = (x * 4.5).toFixed(2);
-
-    setTransform(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`);
-  }, []);
-
-  const handleMouseEnter = useCallback(() => {
-    if (typeof window !== "undefined") {
-      if (window.matchMedia("(hover: none)").matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        return;
-      }
-    }
-    setIsHovered(true);
-  }, []);
-
-  const handleMouseLeave = useCallback(() => {
-    setIsHovered(false);
-    setTransform("perspective(1000px) rotateX(0deg) rotateY(0deg)");
-  }, []);
-
   return (
-    <div
-      ref={containerRef}
-      onMouseMove={handleMouseMove}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      className="relative w-full overflow-hidden flex items-center justify-center"
-      style={{
-        aspectRatio: "4/3",
-        backgroundColor: C.surface,
-        border: `1px solid ${C.outlineVariant}`,
-        transform,
-        transformStyle: "preserve-3d",
-        transition: isHovered
-          ? "transform 0.12s ease-out"
-          : "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
-        willChange: "transform",
-      }}
-    >
-      <img
-        className="absolute inset-0 w-full h-full object-cover pointer-events-none select-none"
-        src={src}
-        alt={alt}
+    <div className="relative w-full max-w-[560px] mx-auto" style={{ padding: "12px" }}>
+      {/* Sky Blue gradient background layer behind (rotated +2deg, inset relative to image) */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: "0px",
+          borderRadius: "20px",
+          background: "linear-gradient(135deg, rgba(109, 201, 240, 0.75) 0%, rgba(127, 203, 239, 0.65) 50%, rgba(0, 102, 255, 0.55) 100%)",
+          transform: inView ? "rotate(2deg)" : "rotate(2deg) translateY(30px) scale(0.95)",
+          opacity: inView ? (isHovered ? 1 : 0.85) : 0,
+          transition: "opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s",
+          zIndex: 0,
+          pointerEvents: "none",
+        }}
       />
-      <div className="absolute inset-0 pointer-events-none" style={{ backgroundColor: `${C.surfaceLowest}33` }} />
+
+      {/* Floating Card Image Wrapper */}
+      <div
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        style={{
+          position: "relative",
+          zIndex: 1,
+          width: "100%",
+          aspectRatio: "4/3",
+          borderRadius: "16px",
+          overflow: "hidden",
+          backgroundColor: "#0F172A",
+          border: `1px solid rgba(56, 189, 248, 0.3)`,
+          boxShadow: isHovered
+            ? "0 32px 64px -12px rgba(14, 165, 233, 0.28), 0 20px 40px -10px rgba(15, 23, 42, 0.2)"
+            : "0 25px 50px -12px rgba(14, 165, 233, 0.2), 0 15px 30px -10px rgba(15, 23, 42, 0.15)",
+          transform: !inView
+            ? "translateY(30px) scale(0.95) rotate(-1deg)"
+            : isHovered
+            ? "translateY(0) scale(1) rotate(0deg)"
+            : "translateY(0) scale(1) rotate(-1deg)",
+          opacity: inView ? 1 : 0,
+          transition: !inView
+            ? "none"
+            : isHovered
+            ? "transform 0.4s ease, box-shadow 0.4s ease"
+            : "opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s, box-shadow 0.4s ease",
+          willChange: "transform, opacity",
+          cursor: "pointer",
+        }}
+      >
+        <img
+          className="w-full h-full object-cover select-none pointer-events-none"
+          src={src}
+          alt={alt}
+          style={{
+            borderRadius: "16px",
+            transform: isHovered ? "scale(1.08)" : "scale(1)",
+            transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+            willChange: "transform",
+          }}
+        />
+        {/* Subtle glass / sky blue tone overlay */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            borderRadius: "16px",
+            backgroundColor: "rgba(14, 165, 233, 0.08)",
+          }}
+        />
+      </div>
     </div>
   );
 }
@@ -336,12 +347,922 @@ function SystemTaxonomySection() {
             </div>
           </div>
 
-          {/* Right — image with subtle 3D tilt */}
-          <div className="lg:col-span-6">
-            <TiltImage
+          {/* Right — image with floating card & hover zoom */}
+          <div className="lg:col-span-6 flex items-center justify-center">
+            <TaxonomyImageCard
               src="/images/software/pexels-googledeepmind-18069694.jpg"
               alt="Interlocking glass and reinforced titanium building planes"
+              inView={inView}
             />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function CapabilityCard({
+  num,
+  title,
+  desc,
+  index,
+  inView,
+}: {
+  num: string;
+  title: string;
+  desc: string;
+  index: number;
+  inView: boolean;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [hasAnimatedIn, setHasAnimatedIn] = useState(false);
+  const [mousePos, setMousePos] = useState<{ x: number; y: number }>({ x: -1000, y: -1000 });
+
+  useEffect(() => {
+    if (inView) {
+      const timer = setTimeout(() => setHasAnimatedIn(true), (index + 1) * 120 + 600);
+      return () => clearTimeout(timer);
+    }
+  }, [inView, index]);
+
+  const handleMouseMove = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = cardRef.current?.getBoundingClientRect();
+    if (!rect) return;
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    setMousePos({ x, y });
+    if (cardRef.current) {
+      cardRef.current.style.setProperty("--mouse-x", `${x}px`);
+      cardRef.current.style.setProperty("--mouse-y", `${y}px`);
+    }
+  }, []);
+
+  const staggerDelay = index * 120; // 0.12s stagger
+
+  return (
+    <div
+      ref={cardRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setMousePos({ x: -1000, y: -1000 });
+      }}
+      className="group relative overflow-hidden"
+      style={{
+        padding: "24px",
+        borderRadius: "16px",
+        backgroundColor: C.surfaceLowest,
+        border: `1px solid ${isHovered ? "rgba(37, 99, 235, 0.3)" : "rgba(37, 99, 235, 0.08)"}`,
+        boxShadow: isHovered
+          ? "0 20px 40px -8px rgba(37, 99, 235, 0.16)"
+          : "0 4px 12px -2px rgba(15, 23, 42, 0.03)",
+        transform: inView ? "translateY(0)" : "translateY(40px) scale(0.95)",
+        opacity: inView ? 1 : 0,
+        transition: !inView
+          ? "none"
+          : hasAnimatedIn
+          ? "box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease"
+          : isHovered
+          ? "box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease"
+          : `opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${staggerDelay}ms, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${staggerDelay}ms, box-shadow 0.35s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.35s cubic-bezier(0.4, 0, 0.2, 1)`,
+        cursor: "pointer",
+        display: "flex",
+        flexDirection: "column",
+        gap: "14px",
+        willChange: "transform, opacity",
+      }}
+    >
+      {/* Spotlight cursor radial glow (300px circle) */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          inset: 0,
+          borderRadius: "16px",
+          pointerEvents: "none",
+          opacity: isHovered ? 1 : 0,
+          transition: "opacity 0.3s ease",
+          background: `radial-gradient(150px circle at var(--mouse-x, ${mousePos.x}px) var(--mouse-y, ${mousePos.y}px), rgba(37, 99, 235, 0.15), transparent 80%)`,
+          zIndex: 0,
+        }}
+      />
+
+      {/* Header row with Circular Number Badge */}
+      <div className="relative z-10 flex items-center justify-between">
+        <div
+          style={{
+            width: "28px",
+            height: "28px",
+            borderRadius: "50%",
+            background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+            color: "#FFFFFF",
+            fontSize: "12px",
+            fontWeight: 700,
+            fontFamily: "'Hanken Grotesk', sans-serif",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            transform: isHovered ? "rotate(360deg)" : "rotate(0deg)",
+            transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+            boxShadow: "0 2px 8px rgba(37, 99, 235, 0.25)",
+            flexShrink: 0,
+          }}
+        >
+          {num}
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-col gap-1.5">
+        <h3
+          style={{
+            ...T.headlineSm,
+            color: isHovered ? "#2563eb" : C.onSurface,
+            transition: "color 0.3s ease",
+          }}
+        >
+          {title}
+        </h3>
+        <p style={{ ...T.bodyMd, color: C.onSurfaceVariant }}>{desc}</p>
+      </div>
+    </div>
+  );
+}
+
+function ArchitecturalCapabilitiesSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const capabilities = [
+    { num: "01", title: "Web Applications", desc: "Deterministic rendering engines, zero-hydration architectures, and accessible responsive interfaces compliant with global regulatory standards." },
+    { num: "02", title: "Mobile Applications", desc: "Native platform compilation providing sub-millisecond thread execution, hardware acceleration, and seamless off-grid state sync." },
+    { num: "03", title: "Full Stack Development", desc: "Vertically integrated systems where data structures transition with strict mathematical continuity from hardware memory to the user viewpoint." },
+    { num: "04", title: "Backend Systems", desc: "Asynchronous event loops, actor-model concurrency, and non-blocking I/O architectures engineered for predictable tail latency under load spikes." },
+    { num: "05", title: "API Architecture", desc: "Strict contract-first protocols leveraging gRPC, Protocol Buffers, and strictly validated GraphQL runtime schemas." },
+    { num: "06", title: "SaaS Platforms", desc: "Multi-tenant compute isolation, programmatic cryptographic scoping, and horizontally partitioned database sharding topologies." },
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      style={{
+        backgroundColor: C.surfaceLow,
+        borderBottom: `1px solid ${C.outlineVariant}`,
+        paddingTop: SP.xl,
+        paddingBottom: SP.xl,
+      }}
+      className="w-full md:py-[5rem]"
+    >
+      <div
+        className="max-w-7xl mx-auto"
+        style={{ paddingLeft: SP.marginSm, paddingRight: SP.marginSm }}
+      >
+        {/* Header */}
+        <div style={{ maxWidth: "42rem", marginBottom: SP.xl }}>
+          <div style={{ ...T.labelSm, color: C.primary, marginBottom: SP.sm }}>EXECUTION DOMAINS</div>
+          <h2
+            style={{ ...T.headlineLgMob, color: C.onSurface }}
+            className="md:text-[2.5rem] md:leading-[3rem]"
+          >
+            Architectural Capabilities
+          </h2>
+          <p style={{ ...T.bodyLg, color: C.onSurfaceVariant, marginTop: SP.sm }}>
+            A comprehensive discipline spanning low-level operating frameworks to ultra-resilient distributed software planes.
+          </p>
+        </div>
+
+        {/* Grid */}
+        <div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
+          style={{
+            gap: "1.5rem",
+            borderTop: `1px solid ${C.outlineVariant}`,
+            paddingTop: SP.xl,
+          }}
+        >
+          {capabilities.map((item, index) => (
+            <CapabilityCard
+              key={item.num}
+              num={item.num}
+              title={item.title}
+              desc={item.desc}
+              index={index}
+              inView={inView}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function TypewriterText({ text, active, delay = 0 }: { text: string; active: boolean; delay?: number }) {
+  const [displayed, setDisplayed] = useState("");
+  const hasTyped = useRef(false);
+
+  useEffect(() => {
+    if (!active) return;
+    if (hasTyped.current) {
+      setDisplayed(text);
+      return;
+    }
+
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      hasTyped.current = true;
+      setDisplayed(text);
+      return;
+    }
+
+    const timer = setTimeout(() => {
+      hasTyped.current = true;
+      let currentIndex = 0;
+      const interval = setInterval(() => {
+        currentIndex++;
+        setDisplayed(text.slice(0, currentIndex));
+        if (currentIndex >= text.length) {
+          clearInterval(interval);
+        }
+      }, 18);
+
+      return () => clearInterval(interval);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [active, text, delay]);
+
+  return (
+    <span className="inline-block relative">
+      {/* Invisible placeholder to reserve exact width and prevent layout shift */}
+      <span className="invisible select-none opacity-0 pointer-events-none" aria-hidden="true">
+        {text}
+      </span>
+      {/* Typed text */}
+      <span className="absolute left-0 top-0 whitespace-nowrap">
+        {active ? displayed : ""}
+      </span>
+    </span>
+  );
+}
+
+function TerminalColumnCard({
+  heading,
+  rows,
+  colIndex,
+  inView,
+}: {
+  heading: string;
+  rows: [string, string?][];
+  colIndex: number;
+  inView: boolean;
+}) {
+  const colDelay = colIndex * 150; // 0.15s stagger between columns
+
+  return (
+    <div
+      className="relative overflow-hidden flex flex-col"
+      style={{
+        backgroundColor: "#0F172A",
+        borderRadius: "12px",
+        padding: "20px",
+        fontFamily: "'JetBrains Mono', 'Fira Code', 'DM Mono', monospace",
+        border: "1px solid rgba(255, 255, 255, 0.08)",
+        boxShadow: "0 10px 30px -10px rgba(0, 0, 0, 0.5)",
+        transform: inView ? "translateY(0)" : "translateY(30px)",
+        opacity: inView ? 1 : 0,
+        transition: `opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1) ${colDelay}ms, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1) ${colDelay}ms`,
+        willChange: "transform, opacity",
+      }}
+    >
+      {/* Terminal window header */}
+      <div style={{ marginBottom: "16px" }}>
+        <h3
+          className="terminal-cursor"
+          style={{
+            fontSize: "0.8125rem",
+            fontWeight: 700,
+            color: "#60A5FA",
+            textTransform: "uppercase",
+            letterSpacing: "0.08em",
+            display: "inline-block",
+            marginBottom: "6px",
+          }}
+        >
+          {heading}
+        </h3>
+        {/* Header 24px wide, 2px tall gradient underline accent */}
+        <div
+          style={{
+            width: "24px",
+            height: "2px",
+            background: "linear-gradient(90deg, #2563eb, transparent)",
+            borderRadius: "1px",
+          }}
+        />
+      </div>
+
+      {/* Rows */}
+      <ul style={{ display: "flex", flexDirection: "column", gap: "4px", margin: 0, padding: 0, listStyle: "none" }}>
+        {rows.map(([name, role], rowIdx) => {
+          const rowDelay = colDelay + 100 + rowIdx * 60;
+
+          return (
+            <li
+              key={name}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                padding: "8px",
+                borderRadius: "6px",
+              }}
+            >
+              <span
+                style={{
+                  fontSize: "0.875rem",
+                  fontWeight: 500,
+                  color: "#E2E8F0",
+                }}
+              >
+                <TypewriterText text={name} active={inView} delay={rowDelay} />
+              </span>
+              <span
+                style={{
+                  fontSize: "0.75rem",
+                  color: "#94A3B8",
+                  letterSpacing: "0.02em",
+                }}
+              >
+                {role}
+              </span>
+            </li>
+          );
+        })}
+      </ul>
+    </div>
+  );
+}
+
+function TechStackSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const columns = [
+    {
+      heading: "Core Languages",
+      rows: [
+        ["Rust"],
+        ["Go (Golang)"],
+        ["TypeScript"],
+        ["C++ / CUDA"],
+        ["Modern Python"],
+      ] as [string][],
+    },
+    {
+      heading: "Frameworks & Runtimes",
+      rows: [
+        ["Tokio / Actix"],
+        ["Next.js / React"],
+        ["Node / Bun"],
+        ["gRPC / Protobuf"],
+        ["Flutter / Swift"],
+      ] as [string][],
+    },
+    {
+      heading: "Cloud Infrastructure",
+      rows: [
+        ["Kubernetes (K8s)"],
+        ["Terraform"],
+        ["AWS & GCP"],
+        ["Cloudflare Workers"],
+        ["OpenTelemetry"],
+      ] as [string][],
+    },
+    {
+      heading: "Database Systems",
+      rows: [
+        ["PostgreSQL"],
+        ["ClickHouse"],
+        ["Redis Cluster"],
+        ["CockroachDB"],
+        ["Apache Kafka"],
+      ] as [string][],
+    },
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        backgroundColor: C.surfaceLow,
+        borderBottom: `1px solid ${C.outlineVariant}`,
+        paddingTop: SP.xl,
+        paddingBottom: SP.xl,
+      }}
+      className="w-full md:py-[5rem]"
+    >
+      <div
+        className="max-w-7xl mx-auto relative z-10"
+        style={{ paddingLeft: SP.marginSm, paddingRight: SP.marginSm }}
+      >
+        {/* Section header row */}
+        <div
+          className="flex flex-col md:flex-row md:items-end justify-between"
+          style={{
+            marginBottom: SP.xl,
+            paddingBottom: SP.md,
+            borderBottom: `1px solid ${C.outlineVariant}`,
+            gap: SP.sm,
+          }}
+        >
+          <div>
+            <div style={{ ...T.labelSm, color: C.primary, marginBottom: SP.xs }}>TECHNICAL FOUNDATION</div>
+            <h2
+              style={{ ...T.headlineLgMob, color: C.onSurface }}
+              className="md:text-[2.5rem] md:leading-[3rem]"
+            >
+              Engineered Tooling &amp; Infrastructure
+            </h2>
+          </div>
+        </div>
+
+        {/* 4-column terminal grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4" style={{ gap: SP.gutterLg }}>
+          {columns.map((col, colIdx) => (
+            <TerminalColumnCard
+              key={col.heading}
+              heading={col.heading}
+              rows={col.rows}
+              colIndex={colIdx}
+              inView={inView}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function DevelopmentProcessSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [activeStep, setActiveStep] = useState(0);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start center", "end center"],
+  });
+
+  const lineHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const viewportCenter = window.innerHeight / 2;
+      let closestIdx = 0;
+      let minDistance = Infinity;
+
+      stepRefs.current.forEach((el, idx) => {
+        if (!el) return;
+        const rect = el.getBoundingClientRect();
+        const stepCenter = rect.top + rect.height / 2;
+        const distance = Math.abs(stepCenter - viewportCenter);
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestIdx = idx;
+        }
+      });
+
+      setActiveStep(closestIdx);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const steps = [
+    {
+      num: "01",
+      title: "Architecture & Strategy",
+      desc: "Formal schema definitions, threat models, database sharding protocols, and performance budgets established before a single line is written.",
+    },
+    {
+      num: "02",
+      title: "Precision Execution",
+      desc: "Sprint development grounded in peer-reviewed modular units, strict type contracts, and continuous component isolation.",
+    },
+    {
+      num: "03",
+      title: "Continuous Verification",
+      desc: "Automated fuzzing pipelines, concurrency stress tests, memory allocation audits, and cryptographic validation passes.",
+    },
+    {
+      num: "04",
+      title: "Deployment & Scale",
+      desc: "Canary orchestrations across geographically distributed edge instances with zero-downtime database migrations.",
+    },
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        backgroundColor: C.surface,
+        paddingTop: SP.xl,
+        paddingBottom: SP.xl,
+      }}
+      className="w-full md:py-[5rem]"
+    >
+      <div
+        className="max-w-7xl mx-auto relative z-10"
+        style={{ paddingLeft: SP.marginSm, paddingRight: SP.marginSm }}
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-12 items-start" style={{ gap: SP.gutterLg }}>
+          {/* Sticky Image left */}
+          <div
+            className="lg:col-span-6 w-full lg:sticky lg:top-[100px]"
+            style={{ alignSelf: "flex-start" }}
+          >
+            <div
+              className="relative w-full overflow-hidden flex items-center justify-center"
+              style={{
+                aspectRatio: "4/5",
+                borderRadius: "16px",
+                backgroundColor: C.surface,
+                border: `1px solid ${C.outlineVariant}`,
+                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.15)",
+              }}
+            >
+              <img
+                className="absolute inset-0 w-full h-full object-cover"
+                src="/images/software/pexels-jakubzerdzicki-36496927.jpg"
+                alt="Immaculate industrial design lab with technical blueprints"
+                style={{ borderRadius: "16px" }}
+              />
+              <div
+                className="absolute inset-0 pointer-events-none"
+                style={{ backgroundColor: `${C.surfaceLowest}22`, borderRadius: "16px" }}
+              />
+            </div>
+          </div>
+
+          {/* Steps right */}
+          <div className="lg:col-span-6" style={{ display: "flex", flexDirection: "column", gap: SP.lg }}>
+            <div>
+              <div style={{ ...T.labelSm, color: C.primary, marginBottom: SP.xs }}>METHODOLOGY</div>
+              <h2
+                style={{ ...T.headlineLgMob, color: C.onSurface }}
+                className="md:text-[2.5rem] md:leading-[3rem]"
+              >
+                Our Development Process
+              </h2>
+              <p style={{ ...T.bodyMd, color: C.onSurfaceVariant, marginTop: SP.sm }}>
+                Engineering milestones executed through absolute predictability, mathematical proofs, and unyielding code quality parameters.
+              </p>
+            </div>
+
+            {/* Timeline container */}
+            <div
+              className="relative"
+              style={{
+                borderTop: `1px solid ${C.outlineVariant}`,
+                paddingTop: SP.md,
+                paddingLeft: "2rem",
+                display: "flex",
+                flexDirection: "column",
+                gap: 0,
+              }}
+            >
+              {/* Base Timeline Line */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  left: "8px",
+                  top: "2.25rem",
+                  bottom: "2.5rem",
+                  width: "2px",
+                  backgroundColor: "rgba(0, 0, 0, 0.08)",
+                  borderRadius: "9999px",
+                }}
+              />
+
+              {/* Animated Progress Overlay Line */}
+              <div
+                aria-hidden="true"
+                style={{
+                  position: "absolute",
+                  left: "8px",
+                  top: "2.25rem",
+                  bottom: "2.5rem",
+                  width: "2px",
+                  overflow: "hidden",
+                  borderRadius: "9999px",
+                }}
+              >
+                <motion.div
+                  style={{
+                    width: "100%",
+                    height: lineHeight,
+                    backgroundColor: "#2563eb",
+                    borderRadius: "9999px",
+                  }}
+                />
+              </div>
+
+              {steps.map(({ num, title, desc }, i) => {
+                const isActive = activeStep === i;
+
+                return (
+                  <div
+                    key={num}
+                    ref={(el) => {
+                      stepRefs.current[i] = el;
+                    }}
+                    style={{
+                      display: "flex",
+                      gap: SP.md,
+                      paddingTop: i > 0 ? SP.md : "0.5rem",
+                      paddingBottom: SP.md,
+                      borderTop: i > 0 ? `1px solid ${C.outlineVariant}66` : "none",
+                      transition: "all 0.4s ease",
+                    }}
+                  >
+                    <span
+                      style={{
+                        ...T.labelMd,
+                        color: isActive ? "#2563eb" : C.primary,
+                        opacity: isActive ? 1 : 0.4,
+                        transform: isActive ? "scale(1.15)" : "scale(1)",
+                        transformOrigin: "left center",
+                        paddingTop: "0.125rem",
+                        flexShrink: 0,
+                        fontWeight: isActive ? 700 : 600,
+                        transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                        display: "inline-block",
+                      }}
+                    >
+                      {num}
+                    </span>
+                    <div>
+                      <h4
+                        style={{
+                          ...T.headlineSm,
+                          color: isActive ? C.onSurface : "#94A3B8",
+                          fontWeight: isActive ? 600 : 500,
+                          transition: "color 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                        }}
+                      >
+                        {title}
+                      </h4>
+                      <p
+                        style={{
+                          ...T.bodyMd,
+                          color: isActive ? C.onSurfaceVariant : "#94A3B8",
+                          marginTop: "0.25rem",
+                          transition: "color 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
+                        }}
+                      >
+                        {desc}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Cross-section background transition gradient into Why Streamli */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: "120px",
+          background: "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(238,242,255,0.7) 60%, #eef2ff 100%)",
+          pointerEvents: "none",
+        }}
+      />
+    </section>
+  );
+}
+
+function WhyStreamliSection() {
+  const sectionRef = useRef<HTMLElement>(null);
+  const [inView, setInView] = useState(false);
+
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"],
+  });
+  const parallaxY = useTransform(scrollYProgress, [0, 1], [-30, 30]);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    if (typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setInView(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.15, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  const points = [
+    {
+      title: "Architectural Resilience",
+      desc: "Self-healing micro-fabrics designed to absorb localized network partitions and infrastructure faults without impacting operational continuity.",
+      icon: <Shield className="w-5 h-5 text-white" />,
+    },
+    {
+      title: "Engineering Rigor",
+      desc: "Every interface complies with rigorous static typing, zero implicit dependencies, and mathematically provable concurrency limits.",
+      icon: <Cog className="w-5 h-5 text-white" />,
+    },
+    {
+      title: "Long-Term Maintainability",
+      desc: "Clean architectural boundaries decouple enterprise logic from framework idiosyncrasies, dramatically reducing lifecycle maintenance overhead.",
+      icon: <Layers className="w-5 h-5 text-white" />,
+    },
+  ];
+
+  return (
+    <section
+      ref={sectionRef}
+      style={{
+        position: "relative",
+        overflow: "hidden",
+        background: "linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%)",
+        borderBottom: `1px solid ${C.outlineVariant}`,
+        paddingTop: SP.xl,
+        paddingBottom: SP.xl,
+      }}
+      className="w-full md:py-[5rem]"
+    >
+      <div
+        className="max-w-7xl mx-auto relative z-10"
+        style={{ paddingLeft: SP.marginSm, paddingRight: SP.marginSm }}
+      >
+        <div className="grid grid-cols-1 lg:grid-cols-12 items-center" style={{ gap: SP.gutterLg }}>
+          {/* Rationale left */}
+          <div className="lg:col-span-6" style={{ display: "flex", flexDirection: "column", gap: SP.md }}>
+            <div style={{ ...T.labelSm, color: C.primary }}>ARCHITECTURAL IMPERATIVES</div>
+            <h2
+              style={{ ...T.headlineLgMob, color: C.onSurface }}
+              className="md:text-[2.5rem] md:leading-[3rem]"
+            >
+              Why Streamli?
+            </h2>
+            <p style={{ ...T.bodyLg, color: C.onSurfaceVariant }}>
+              We design software for organizations where systemic failure is not an option. Our systems are engineered to endure beyond generational hardware cycles.
+            </p>
+
+            <div
+              style={{
+                paddingTop: SP.md,
+                display: "flex",
+                flexDirection: "column",
+                gap: "1.25rem",
+                borderTop: `1px solid ${C.outlineVariant}`,
+              }}
+            >
+              {points.map(({ title, desc, icon }, i) => {
+                const staggerDelay = i * 150;
+                return (
+                  <div
+                    key={title}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: "16px",
+                      opacity: inView ? 1 : 0,
+                      transform: inView ? "translateX(0)" : "translateX(-20px)",
+                      transition: `opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${staggerDelay}ms, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${staggerDelay}ms`,
+                      paddingTop: i > 0 ? "0.75rem" : "0",
+                      borderTop: i > 0 ? `1px solid ${C.outlineVariant}88` : "none",
+                    }}
+                  >
+                    <div
+                      className="why-icon"
+                      style={{
+                        width: "40px",
+                        height: "40px",
+                        borderRadius: "10px",
+                        background: "linear-gradient(135deg, #2563eb, #7c3aed)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        flexShrink: 0,
+                        boxShadow: "0 4px 12px rgba(37, 99, 235, 0.25)",
+                      }}
+                    >
+                      {icon}
+                    </div>
+                    <div style={{ flex: 1 }}>
+                      <h4 style={{ ...T.headlineSm, color: C.onSurface }}>{title}</h4>
+                      <p style={{ ...T.bodyMd, color: C.onSurfaceVariant, marginTop: "0.25rem" }}>{desc}</p>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Image right with subtle parallax */}
+          <div className="lg:col-span-6">
+            <motion.div style={{ y: parallaxY }} className="w-full">
+              <div
+                className="relative w-full overflow-hidden flex items-center justify-center"
+                style={{
+                  aspectRatio: "4/3",
+                  borderRadius: "16px",
+                  backgroundColor: C.surface,
+                  border: `1px solid rgba(37, 99, 235, 0.1)`,
+                  boxShadow: "0 25px 50px -12px rgba(37, 99, 235, 0.2)",
+                  opacity: inView ? 1 : 0,
+                  transform: inView ? "scale(1)" : "scale(0.95)",
+                  transition: "opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.1s",
+                }}
+              >
+                <img
+                  className="absolute inset-0 w-full h-full object-cover"
+                  src="/images/software/pexels-thisisengineering-3861951.jpg"
+                  alt="Crystalline structural columns and balanced cantilevers"
+                  style={{ borderRadius: "16px" }}
+                />
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{ borderRadius: "16px", backgroundColor: `${C.surfaceLowest}22` }}
+                />
+              </div>
+            </motion.div>
           </div>
         </div>
       </div>
@@ -466,60 +1387,7 @@ export function ProductDevelopmentView() {
       {/* ═══════════════════════════════════════════════════════════════
           3. CAPABILITIES — Editorial typographic grid (no media)
       ═══════════════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          backgroundColor: C.surfaceLow,
-          borderBottom: `1px solid ${C.outlineVariant}`,
-          paddingTop: SP.xl,
-          paddingBottom: SP.xl,
-        }}
-        className="w-full md:py-[5rem]"
-      >
-        <div
-          className="max-w-7xl mx-auto"
-          style={{ paddingLeft: SP.marginSm, paddingRight: SP.marginSm }}
-        >
-          {/* Header */}
-          <div style={{ maxWidth: "42rem", marginBottom: SP.xl }}>
-            <div style={{ ...T.labelSm, color: C.primary, marginBottom: SP.sm }}>EXECUTION DOMAINS</div>
-            <h2
-              style={{ ...T.headlineLgMob, color: C.onSurface }}
-              className="md:text-[2.5rem] md:leading-[3rem]"
-            >
-              Architectural Capabilities
-            </h2>
-            <p style={{ ...T.bodyLg, color: C.onSurfaceVariant, marginTop: SP.sm }}>
-              A comprehensive discipline spanning low-level operating frameworks to ultra-resilient distributed software planes.
-            </p>
-          </div>
-
-          {/* Grid */}
-          <div
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-            style={{
-              columnGap: SP.gutterLg,
-              rowGap: SP.xl,
-              borderTop: `1px solid ${C.outlineVariant}`,
-              paddingTop: SP.xl,
-            }}
-          >
-            {[
-              { num: "01", title: "Web Applications",       desc: "Deterministic rendering engines, zero-hydration architectures, and accessible responsive interfaces compliant with global regulatory standards." },
-              { num: "02", title: "Mobile Applications",    desc: "Native platform compilation providing sub-millisecond thread execution, hardware acceleration, and seamless off-grid state sync." },
-              { num: "03", title: "Full Stack Development", desc: "Vertically integrated systems where data structures transition with strict mathematical continuity from hardware memory to the user viewpoint." },
-              { num: "04", title: "Backend Systems",        desc: "Asynchronous event loops, actor-model concurrency, and non-blocking I/O architectures engineered for predictable tail latency under load spikes." },
-              { num: "05", title: "API Architecture",       desc: "Strict contract-first protocols leveraging gRPC, Protocol Buffers, and strictly validated GraphQL runtime schemas." },
-              { num: "06", title: "SaaS Platforms",         desc: "Multi-tenant compute isolation, programmatic cryptographic scoping, and horizontally partitioned database sharding topologies." },
-            ].map(({ num, title, desc }) => (
-              <div key={num} style={{ display: "flex", flexDirection: "column", gap: SP.xs }}>
-                <div style={{ ...T.labelSm, color: C.primary }}>{num}- DISCIPLINE</div>
-                <h3 style={{ ...T.headlineSm, color: C.onSurface }}>{title}</h3>
-                <p style={{ ...T.bodyMd, color: C.onSurfaceVariant }}>{desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <ArchitecturalCapabilitiesSection />
 
 
       {/* ═══════════════════════════════════════════════════════════════
@@ -577,26 +1445,20 @@ export function ProductDevelopmentView() {
               maxWidth: "80rem",
               margin: "0 auto",
               width: "100%",
-              // make the padding act from left
               boxSizing: "border-box",
             }}
           >
-            <div
-              className="flex flex-col md:flex-row md:items-end justify-between"
-              style={{ gap: SP.md }}
-            >
-              <div>
-                <div style={{ ...T.labelSm, color: "#60a5fa", marginBottom: SP.xs }}>
-                  PHASE TRANSITION
-                </div>
-                <h2
-                  style={{ ...T.headlineLgMob, color: "#FFFFFF" }}
-                  className="md:text-[2.5rem] md:leading-[3rem]"
-                >
-                  From Idea to Product
-                </h2>
+            <div style={{ maxWidth: "48rem" }}>
+              <div style={{ ...T.labelSm, color: "#60a5fa", marginBottom: SP.xs }}>
+                PHASE TRANSITION
               </div>
-              <p style={{ ...T.bodyMd, color: "rgba(255,255,255,0.75)", maxWidth: "28rem" }}>
+              <h2
+                style={{ ...T.headlineLgMob, color: "#FFFFFF" }}
+                className="md:text-[2.5rem] md:leading-[3rem]"
+              >
+                From Idea to Product
+              </h2>
+              <p style={{ ...T.bodyLg, color: "rgba(255,255,255,0.75)", marginTop: SP.sm }}>
                 Abstract conceptualization translated through rigorous architectural schemas into executable software artifacts.
               </p>
             </div>
@@ -671,279 +1533,19 @@ export function ProductDevelopmentView() {
 
 
       {/* ═══════════════════════════════════════════════════════════════
-          6. TECH STACK — Typography & structured grouping (no media)
+          6. TECH STACK — Terminal blocks & typewriter reveal
       ═══════════════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          backgroundColor: C.surfaceLow,
-          borderBottom: `1px solid ${C.outlineVariant}`,
-          paddingTop: SP.xl,
-          paddingBottom: SP.xl,
-        }}
-        className="w-full md:py-[5rem]"
-      >
-        <div
-          className="max-w-7xl mx-auto"
-          style={{ paddingLeft: SP.marginSm, paddingRight: SP.marginSm }}
-        >
-          {/* Section header row */}
-          <div
-            className="flex flex-col md:flex-row md:items-end justify-between"
-            style={{
-              marginBottom: SP.xl,
-              paddingBottom: SP.md,
-              borderBottom: `1px solid ${C.outlineVariant}`,
-              gap: SP.sm,
-            }}
-          >
-            <div>
-              <div style={{ ...T.labelSm, color: C.primary, marginBottom: SP.xs }}>TECHNICAL FOUNDATION</div>
-              <h2
-                style={{ ...T.headlineLgMob, color: C.onSurface }}
-                className="md:text-[2.5rem] md:leading-[3rem]"
-              >
-                Engineered Tooling &amp; Infrastructure
-              </h2>
-            </div>
-          </div>
-
-          {/* 4-column grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4" style={{ gap: SP.gutterLg }}>
-            {[
-              {
-                heading: "Core Languages",
-                rows: [
-                  ["Rust",          "Systems & Runtime"],
-                  ["Go (Golang)",   "Microservices"],
-                  ["TypeScript",    "Full-Stack Type Safety"],
-                  ["C++ / CUDA",    "Compute Optimization"],
-                  ["Modern Python", "Scientific & Analytics"],
-                ],
-              },
-              {
-                heading: "Frameworks & Runtimes",
-                rows: [
-                  ["Tokio / Actix",   "Async Systems"],
-                  ["Next.js / React", "Edge Render"],
-                  ["Node / Bun",      "Event Runtimes"],
-                  ["gRPC / Protobuf", "Serialization"],
-                  ["Flutter / Swift", "Native Mobile"],
-                ],
-              },
-              {
-                heading: "Cloud Infrastructure",
-                rows: [
-                  ["Kubernetes (K8s)",    "Orchestration"],
-                  ["Terraform",          "Immutable IaC"],
-                  ["AWS & GCP",          "Multi-Cloud Fabric"],
-                  ["Cloudflare Workers", "Edge Execution"],
-                  ["OpenTelemetry",      "Observability"],
-                ],
-              },
-              {
-                heading: "Database Systems",
-                rows: [
-                  ["PostgreSQL",  "ACID Relational"],
-                  ["ClickHouse",  "Analytical Columnar"],
-                  ["Redis Cluster","In-Memory Store"],
-                  ["CockroachDB", "Distributed SQL"],
-                  ["Apache Kafka","Event Log Engine"],
-                ],
-              },
-            ].map(({ heading, rows }) => (
-              <div key={heading} style={{ display: "flex", flexDirection: "column", gap: SP.md }}>
-                <h3
-                  style={{
-                    ...T.labelMd,
-                    color: C.primary,
-                    textTransform: "uppercase",
-                    borderBottom: `1px solid ${C.outlineVariant}`,
-                    paddingBottom: SP.xs,
-                  }}
-                >
-                  {heading}
-                </h3>
-                <ul style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-                  {rows.map(([name, role]) => (
-                    <li
-                      key={name}
-                      style={{
-                        ...T.bodyMd,
-                        color: C.onSurface,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        paddingTop: "0.25rem",
-                        paddingBottom: "0.25rem",
-                        borderBottom: `1px solid ${C.outlineVariant}66`,
-                      }}
-                    >
-                      <span>{name}</span>
-                      <span style={{ ...T.labelSm, color: C.onSurfaceVariant }}>{role}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <TechStackSection />
 
       {/* ═══════════════════════════════════════════════════════════════
           7. DEVELOPMENT PROCESS — Image left, steps right
       ═══════════════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          backgroundColor: C.surfaceLowest,
-          borderBottom: `1px solid ${C.outlineVariant}`,
-          paddingTop: SP.xl,
-          paddingBottom: SP.xl,
-        }}
-        className="w-full md:py-[5rem]"
-      >
-        <div
-          className="max-w-7xl mx-auto"
-          style={{ paddingLeft: SP.marginSm, paddingRight: SP.marginSm }}
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-12 items-center" style={{ gap: SP.gutterLg }}>
-
-            {/* Image left */}
-            <div className="lg:col-span-6">
-              <div
-                className="relative w-full overflow-hidden flex items-center justify-center"
-                style={{
-                  aspectRatio: "4/5",
-                  backgroundColor: C.surface,
-                  border: `1px solid ${C.outlineVariant}`,
-                }}
-              >
-                <img
-                  className="absolute inset-0 w-full h-full object-cover"
-                  src="/images/software/pexels-jakubzerdzicki-36496927.jpg"
-                  alt="Immaculate industrial design lab with technical blueprints"
-                />
-                <div className="absolute inset-0" style={{ backgroundColor: `${C.surfaceLowest}33` }} />
-              </div>
-            </div>
-
-            {/* Steps right */}
-            <div className="lg:col-span-6" style={{ display: "flex", flexDirection: "column", gap: SP.lg }}>
-              <div>
-                <div style={{ ...T.labelSm, color: C.primary, marginBottom: SP.xs }}>METHODOLOGY</div>
-                <h2
-                  style={{ ...T.headlineLgMob, color: C.onSurface }}
-                  className="md:text-[2.5rem] md:leading-[3rem]"
-                >
-                  Our Development Process
-                </h2>
-                <p style={{ ...T.bodyMd, color: C.onSurfaceVariant, marginTop: SP.sm }}>
-                  Engineering milestones executed through absolute predictability, mathematical proofs, and unyielding code quality parameters.
-                </p>
-              </div>
-
-              <div style={{ borderTop: `1px solid ${C.outlineVariant}`, paddingTop: SP.md, display: "flex", flexDirection: "column", gap: 0 }}>
-                {[
-                  { num: "01", title: "Architecture & Strategy",  desc: "Formal schema definitions, threat models, database sharding protocols, and performance budgets established before a single line is written." },
-                  { num: "02", title: "Precision Execution",      desc: "Sprint development grounded in peer-reviewed modular units, strict type contracts, and continuous component isolation." },
-                  { num: "03", title: "Continuous Verification",  desc: "Automated fuzzing pipelines, concurrency stress tests, memory allocation audits, and cryptographic validation passes." },
-                  { num: "04", title: "Deployment & Scale",       desc: "Canary orchestrations across geographically distributed edge instances with zero-downtime database migrations." },
-                ].map(({ num, title, desc }, i) => (
-                  <div
-                    key={num}
-                    style={{
-                      display: "flex",
-                      gap: SP.md,
-                      paddingTop: i > 0 ? SP.md : 0,
-                      paddingBottom: SP.md,
-                      borderTop: i > 0 ? `1px solid ${C.outlineVariant}` : "none",
-                    }}
-                  >
-                    <span style={{ ...T.labelMd, color: C.primary, paddingTop: "0.125rem", flexShrink: 0 }}>{num}</span>
-                    <div>
-                      <h4 style={{ ...T.headlineSm, color: C.onSurface }}>{title}</h4>
-                      <p style={{ ...T.bodyMd, color: C.onSurfaceVariant, marginTop: "0.25rem" }}>{desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <DevelopmentProcessSection />
 
       {/* ═══════════════════════════════════════════════════════════════
           8. WHY OUR SERVICE — Rationale left, image right
       ═══════════════════════════════════════════════════════════════ */}
-      <section
-        style={{
-          backgroundColor: C.surfaceLow,
-          borderBottom: `1px solid ${C.outlineVariant}`,
-          paddingTop: SP.xl,
-          paddingBottom: SP.xl,
-        }}
-        className="w-full md:py-[5rem]"
-      >
-        <div
-          className="max-w-7xl mx-auto"
-          style={{ paddingLeft: SP.marginSm, paddingRight: SP.marginSm }}
-        >
-          <div className="grid grid-cols-1 lg:grid-cols-12 items-center" style={{ gap: SP.gutterLg }}>
-
-            {/* Rationale left */}
-            <div className="lg:col-span-6" style={{ display: "flex", flexDirection: "column", gap: SP.md }}>
-              <div style={{ ...T.labelSm, color: C.primary }}>ARCHITECTURAL IMPERATIVES</div>
-              <h2
-                style={{ ...T.headlineLgMob, color: C.onSurface }}
-                className="md:text-[2.5rem] md:leading-[3rem]"
-              >
-                Why Streamli?
-              </h2>
-              <p style={{ ...T.bodyLg, color: C.onSurfaceVariant }}>
-                We design software for organizations where systemic failure is not an option. Our systems are engineered to endure beyond generational hardware cycles.
-              </p>
-
-              <div style={{ paddingTop: SP.md, display: "flex", flexDirection: "column", gap: 0, borderTop: `1px solid ${C.outlineVariant}` }}>
-                {[
-                  { title: "Architectural Resilience",  desc: "Self-healing micro-fabrics designed to absorb localized network partitions and infrastructure faults without impacting operational continuity." },
-                  { title: "Engineering Rigor",         desc: "Every interface complies with rigorous static typing, zero implicit dependencies, and mathematically provable concurrency limits." },
-                  { title: "Long-Term Maintainability", desc: "Clean architectural boundaries decouple enterprise logic from framework idiosyncrasies, dramatically reducing lifecycle maintenance overhead." },
-                ].map(({ title, desc }, i) => (
-                  <div
-                    key={title}
-                    style={{
-                      paddingTop: i > 0 ? SP.sm : 0,
-                      paddingBottom: SP.sm,
-                      borderTop: i > 0 ? `1px solid ${C.outlineVariant}` : "none",
-                    }}
-                  >
-                    <h4 style={{ ...T.headlineSm, color: C.onSurface }}>{title}</h4>
-                    <p style={{ ...T.bodyMd, color: C.onSurfaceVariant, marginTop: "0.25rem" }}>{desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Image right */}
-            <div className="lg:col-span-6">
-              <div
-                className="relative w-full overflow-hidden flex items-center justify-center"
-                style={{
-                  aspectRatio: "4/3",
-                  backgroundColor: C.surface,
-                  border: `1px solid ${C.outlineVariant}`,
-                }}
-              >
-                <img
-                  className="absolute inset-0 w-full h-full object-cover"
-                  src="/images/software/pexels-thisisengineering-3861951.jpg"
-                  alt="Crystalline structural columns and balanced cantilevers"
-                />
-                <div className="absolute inset-0" style={{ backgroundColor: `${C.surfaceLowest}33` }} />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+      <WhyStreamliSection />
 
       {/* ═══════════════════════════════════════════════════════════════
           10. FINAL CTA — Full-width visual with consultation prompt

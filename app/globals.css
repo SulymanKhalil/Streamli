@@ -208,6 +208,72 @@ button, input, select, textarea { font: inherit; }
 }
 
 /* =========================================================================
+   SOFTWARE DEV PAGE — CONTACT SECTION CTA BUTTONS
+   Square corners by default; smooth pill on hover
+   ========================================================================= */
+.cta-btn {
+  border-radius: 0px !important;
+  transition: border-radius 0.25s ease, background-color 150ms;
+  cursor: pointer;
+}
+.cta-btn:hover {
+  border-radius: 16px !important;
+}
+
+/* =========================================================================
+   SOFTWARE DEV PAGE — TERMINAL CARDS & SCANLINE
+   ========================================================================= */
+.terminal-cursor::after {
+  content: '_';
+  animation: blinkCursor 1s step-end infinite;
+  color: #60a5fa;
+  font-weight: 700;
+  margin-left: 3px;
+}
+@keyframes blinkCursor {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.scan-line {
+  position: absolute;
+  left: 0;
+  height: 2px;
+  width: 100%;
+  background: linear-gradient(90deg, transparent 0%, rgba(37, 99, 235, 0.8) 50%, transparent 100%);
+  animation: scanLine 4.5s linear infinite;
+  pointer-events: none;
+  opacity: 0.45;
+  z-index: 1;
+}
+@keyframes scanLine {
+  0% { top: 0%; opacity: 0; }
+  10% { opacity: 0.45; }
+  90% { opacity: 0.45; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* =========================================================================
+   SOFTWARE DEV PAGE — WHY STREAMLI ICON PULSE RING
+   ========================================================================= */
+.why-icon {
+  position: relative;
+}
+.why-icon::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 12px;
+  border: 2px solid rgba(37, 99, 235, 0.35);
+  animation: pulse-ring 2s ease-out infinite;
+  pointer-events: none;
+}
+@keyframes pulse-ring {
+  0% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(1.3); opacity: 0; }
+}
+
+/* =========================================================================
    PREMIUM VERTICAL SIDE NAVIGATION & SPATIAL MATRIX SYSTEM
 /* =========================================================================
    CLEAN TOP NAVBAR & RIGHT-SLIDING FULL-SCREEN EDITORIAL NAVIGATION
@@ -231,10 +297,20 @@ button, input, select, textarea { font: inherit; }
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(0, 102, 255, 0.12);
+  /* Smooth slide transition */
+  transform: translateY(0);
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+/* Slide navbar fully above the viewport on scroll-down */
+.site-header.nav-hidden {
+  transform: translateY(-100%);
 }
 
 .site-header-inner {
-  width: min(1320px, calc(100% - 64px));
+  /* Reduced from min(1320px) to min(980px) — approx 25% narrower */
+  width: min(980px, calc(100% - 64px));
   margin: 0 auto;
   height: 100%;
   display: flex;

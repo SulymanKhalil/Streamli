@@ -55,8 +55,10 @@ export function Header() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [hoveredMenu, setHoveredMenu] = useState<"services" | "about" | null>(null);
+  const [navHidden, setNavHidden] = useState(false);
 
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastScrollY = useRef(0);
 
   const clearHoverTimeout = () => {
     if (timeoutRef.current) {
@@ -64,6 +66,32 @@ export function Header() {
       timeoutRef.current = null;
     }
   };
+
+  // Scroll hide / reveal
+  useEffect(() => {
+    const onScroll = () => {
+      const current = window.scrollY;
+      // Always reveal when within 80px of top or when menu is open
+      if (current < 80) {
+        setNavHidden(false);
+      } else if (current > lastScrollY.current) {
+        // Scrolling DOWN
+        setNavHidden(true);
+      } else {
+        // Scrolling UP
+        setNavHidden(false);
+      }
+      lastScrollY.current = current;
+    };
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  // Always show navbar when menu is open
+  useEffect(() => {
+    if (menuOpen) setNavHidden(false);
+  }, [menuOpen]);
 
   // Close full-screen menu on route change
   useEffect(() => {
@@ -128,7 +156,7 @@ export function Header() {
           - Existing company logo at top-left
           - Minimal 3-line hamburger at top-right
           ========================================================================= */}
-      <header className="site-header" aria-label="Main Website Navigation">
+      <header className={`site-header${navHidden ? " nav-hidden" : ""}`} aria-label="Main Website Navigation">
         <div className="site-header-inner">
           {/* Logo at Top-Left (hidden when full-screen menu is open) */}
           <Link
